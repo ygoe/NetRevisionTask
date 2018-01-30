@@ -1,0 +1,55 @@
+# User-specific files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Downloaded NuGet packages
+/packages/*/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Others
+*.meta
+*.pdb
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+*.scc
+*.[Cc]ache
+[Ss]tyle[Cc]op.*
+~$*
+*~
+*.pfx
+*.p12
+*.bak
+.internal
+.local
+.tmp
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity is a build add-in
+_TeamCity*
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# Windows/other detritus
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

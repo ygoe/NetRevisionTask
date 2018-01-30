@@ -1,0 +1,80 @@
+﻿<!--
+	This file is automatically imported by NuGet into a user's project
+	when it targets a single framework, or in classic (pre 2017) csproj projects.
+	The xmlns is required for VS 2015.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="NrtInitialize" BeforeTargets="NrtSetVersion;NrtPatchAssemblyInfo">
+		<!--
+			Set default options if unset. These properties can be specified in each project's .csproj file
+			to configure the behaviour of this tool.
+		-->
+		<PropertyGroup>
+			<NrtResolveSimpleAttributes Condition="'$(NrtResolveSimpleAttributes)' == ''">true</NrtResolveSimpleAttributes>
+			<NrtResolveInformationalAttribute Condition="'$(NrtResolveInformationalAttribute)' == ''">true</NrtResolveInformationalAttribute>
+			<NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
+			<NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
+			<NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
+		</PropertyGroup>
+	</Target>
+
+	<!--
+		Always set the version properties for MSBuild.
+	-->
+	<Target Name="NrtSetVersion" BeforeTargets="BeforeBuild">
+		<SetVersion
+			ProjectDir="$(MSBuildProjectDirectory)"
+			GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
+			RevisionFormat="$(NrtRevisionFormat)"
+			RequiredVcs="$(NrtRequiredVcs)"
+			TagMatch="$(NrtTagMatch)"
+			RemoveTagV="$(NrtRemoveTagV)"
+			ResolveCopyright="$(NrtResolveCopyright)"
+			Copyright="$(Copyright)"
+			ShowRevision="$(NrtShowRevision)">
+			<Output TaskParameter="Version" PropertyName="Version"/>
+			<Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion"/>
+			<Output TaskParameter="Copyright" PropertyName="Copyright"/>
+		</SetVersion>
+
+		<!--
+			Set additional properties based on what the task returned.
+		-->
+		<PropertyGroup>
+			<FileVersion>$(Version)</FileVersion>
+		</PropertyGroup>
+	</Target>
+
+	<!--
+		Patch the AssemblyInfo source file before building only if MSBuild is not generating it.
+		The original source files are backed up to be restored in the next target after building.
+		This target is required for classic (pre 2017) csproj projects.
+	-->
+	<Target Name="NrtPatchAssemblyInfo" BeforeTargets="BeforeBuild">
+		<PatchAssemblyInfo
+			ProjectDir="$(MSBuildProjectDirectory)"
+			GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
+			RevisionFormat="$(NrtRevisionFormat)"
+			RequiredVcs="$(NrtRequiredVcs)"
+			TagMatch="$(NrtTagMatch)"
+			RemoveTagV="$(NrtRemoveTagV)"
+			ResolveSimpleAttributes="$(NrtResolveSimpleAttributes)"
+			ResolveInformationalAttribute="$(NrtResolveInformationalAttribute)"
+			RevisionNumberOnly="$(NrtRevisionNumberOnly)"
+			ResolveCopyright="$(NrtResolveCopyright)"
+			ShowRevision="$(NrtShowRevision)"/>
+	</Target>
+
+	<!--
+		Restore the AssemblyInfo source file after building only if MSBuild is not generating it.
+		The backed up original files are restored and no backup files remain after building.
+		This target is required for classic (pre 2017) csproj projects.
+	-->
+	<Target Name="NrtRestoreAssemblyInfo" AfterTargets="AfterBuild">
+		<RestoreAssemblyInfo
+			ProjectDir="$(MSBuildProjectDirectory)"
+			GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
+			RevisionFormat="$(NrtRevisionFormat)"
+			RequiredVcs="$(NrtRequiredVcs)"/>
+	</Target>
+</Project>

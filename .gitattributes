@@ -1,0 +1,3 @@
+# Set core.autocrlf=false for everybody because we need full control over individual files' line endings.
+# See http://stackoverflow.com/a/10017566
+* -text

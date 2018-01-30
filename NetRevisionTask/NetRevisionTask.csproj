@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
+    <!-- Makes this project work when compiling on macOS and Linux because .NET Framework is not available -->
+    <TargetFrameworks Condition="$(OS) != 'Windows_NT'">netstandard1.6</TargetFrameworks>
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <!-- Change the default location where NuGet will put the build output -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Unclassified.NetRevisionTask</PackageId>
+    <Title>.NET Revision Task for MSBuild</Title>
+    <Authors>Yves Goergen</Authors>
+    <Company>unclassified software development</Company>
+    <Description>Injects the current VCS revision of a working directory in a custom format into a .NET assembly build. Based on the .NET Revision Tool, integrated as an MSBuild task, for .NET Framework and .NET Core.</Description>
+    <Copyright>© Yves Goergen</Copyright>
+    <PackageProjectUrl>https://unclassified.software/apps/netrevisiontask</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ygoe/NetRevisionTask</RepositoryUrl>
+    <PackageTags>build version management git svn subversion msbuild vcs</PackageTags>
+    <Product>.NET Revision Task</Product>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'Release'">
+    <!-- Sets the debug pre-release version automatically -->
+    <VersionSuffix>dev.$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <DefineConstants>NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
+    <DefineConstants>NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build\*" PackagePath="build\" />
+    <Content Include="buildMultiTargeting\*" PackagePath="buildMultiTargeting\" />
+    <!-- C# 7 tuples requires System.ValueTuple, but adding the NuGet package won't copy the DLL to
+    the output directory, where it is needed for MSBuild to find it for this tasks DLL. So we just
+    revert to the plain old manual references and use the .NETStandard1.0 build of that DLL. It
+    still needs to be copied manually because the compiler ignores it. But with this method, at
+    least we know where to copy it from. -->
+    <Content Include="lib\netstandard1.0\System.ValueTuple.dll" PackagePath="tasks\net46\" />
+    <Content Include="lib\netstandard1.0\System.ValueTuple.dll" PackagePath="tasks\netstandard1.6\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="14.3.0" />
+    <!-- Info: A later version with VS 2017 would be 15.1.1012 -->
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="14.3.0" />
+    <!-- Marks all packages as 'local only' so they don't end up in the nuspec. -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ValueTuple">
+      <HintPath>lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -114,7 +114,7 @@ namespace NetRevisionTask.Tasks
 			}
 			if (string.IsNullOrEmpty(RevisionFormat))
 			{
-				RevisionFormat = Common.GetRevisionFormat(ProjectDir, logger);
+				RevisionFormat = Common.GetRevisionFormat(ProjectDir, logger, true);
 			}
 			if (string.IsNullOrEmpty(RevisionFormat))
 			{

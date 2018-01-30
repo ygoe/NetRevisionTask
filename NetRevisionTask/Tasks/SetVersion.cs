@@ -111,7 +111,7 @@ namespace NetRevisionTask.Tasks
 			logger = new TaskLogger(Log);
 			logger.Trace($"NetRevisionTask: SetVersion ({targetFramework})");
 
-			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger);
+			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo);
 			if (!result.success)
 			{
 				return false;

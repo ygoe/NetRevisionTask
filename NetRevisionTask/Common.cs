@@ -8,7 +8,7 @@ namespace NetRevisionTask
 	internal class Common
 	{
 		public static (bool success, string version, string informationalVersion, string copyright)
-			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger)
+			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing)
 		{
 			// Analyse working directory
 			RevisionData data = ProcessDirectory(projectDir, requiredVcs, tagMatch, logger);
@@ -19,7 +19,7 @@ namespace NetRevisionTask
 			}
 			if (string.IsNullOrEmpty(revisionFormat))
 			{
-				revisionFormat = GetRevisionFormat(projectDir, logger);
+				revisionFormat = GetRevisionFormat(projectDir, logger, warnOnMissing);
 			}
 			if (string.IsNullOrEmpty(revisionFormat))
 			{
@@ -123,15 +123,19 @@ namespace NetRevisionTask
 		/// </summary>
 		/// <param name="projectDir">The project directory to look for the AssemblyInfo file in.</param>
 		/// <param name="logger">A logger.</param>
+		/// <param name="warnOnMissing">Logs a warning if the file is missing.</param>
 		/// <returns>The format string if found; otherwise, null.</returns>
-		public static string GetRevisionFormat(string projectDir, ILogger logger)
+		public static string GetRevisionFormat(string projectDir, ILogger logger, bool warnOnMissing)
 		{
 			logger.Trace("No format specified, searching AssemblyInfo source file.");
 			AssemblyInfoHelper aih = null;
 			aih = new AssemblyInfoHelper(projectDir, false, logger);
 			if (!aih.FileExists)
 			{
-				logger.Warning("AssemblyInfo source file not found.");
+				if (warnOnMissing)
+					logger.Warning("AssemblyInfo source file not found. Using default revision format.");
+				else
+					logger.Trace("AssemblyInfo source file not found. Using default revision format.");
 				return null;
 			}
 

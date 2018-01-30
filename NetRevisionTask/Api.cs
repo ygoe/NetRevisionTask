@@ -20,7 +20,7 @@ namespace NetRevisionTask
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger);
+			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
 			if (!result.success)
 			{
 				return null;
@@ -40,7 +40,7 @@ namespace NetRevisionTask
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger);
+			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
 			if (!result.success)
 			{
 				return null;

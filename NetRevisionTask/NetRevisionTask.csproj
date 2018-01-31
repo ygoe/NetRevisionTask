@@ -8,20 +8,21 @@
     <!-- Change the default location where NuGet will put the build output -->
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
 
-    <VersionPrefix>0.1.1</VersionPrefix>
+    <VersionPrefix>0.1.2</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Unclassified.NetRevisionTask</PackageId>
     <Title>.NET Revision Task for MSBuild</Title>
+    <Product>.NET Revision Task</Product>
     <Authors>Yves Goergen</Authors>
     <Company>unclassified software development</Company>
     <Description>Injects the current VCS revision of a working directory in a custom format into a .NET assembly build. Based on the .NET Revision Tool, integrated as an MSBuild task, for .NET Framework and .NET Core.</Description>
     <Copyright>© Yves Goergen</Copyright>
-    <PackageProjectUrl>https://unclassified.software/apps/netrevisiontask</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ygoe/NetRevisionTask</RepositoryUrl>
+    <PackageProjectUrl>https://unclassified.software/apps/netrevisiontask</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/ygoe/NetRevisionTask/master/netrevisiontask_64.png</PackageIconUrl>
     <PackageTags>build version management git svn subversion msbuild vcs</PackageTags>
-    <Product>.NET Revision Task</Product>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' != 'Release'">
     <!-- Sets the debug pre-release version automatically -->

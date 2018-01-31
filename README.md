@@ -2,6 +2,8 @@
 
 Injects the current version control system (VCS) revision of a working directory in a custom format into a .NET assembly build.
 
+[![NuGet](https://img.shields.io/nuget/v/Unclassified.NetRevisionTask.svg)](https://www.nuget.org/packages/Unclassified.NetRevisionTask)
+
 ## Introduction
 
 Based on the idea of the .NET Revision Tool, which is a standalone executable that could print out revision information and patch and restore source files before and after a build, this is a **custom MSBuild task** that tightly integrates with the standard build process. It now supports .NET Core projects in VS 2017 (.csproj format) by providing the version information through **MSBuild properties like `Version` and `InformationalVersion`** instead of writing to source files directly. Patching and restoring source files is still supported as a fallback mechanism for classic-style projects (VS 2015 and WPF/.NET Framework).

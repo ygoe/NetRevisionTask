@@ -59,6 +59,12 @@ namespace NetRevisionTask
 		#region Format resolving
 
 		/// <summary>
+		/// Shortcut for parsing a number from a Regex match.
+		/// </summary>
+		private static int ParseInt(Match match, int groupIndex = 1) =>
+			int.Parse(match.Groups[groupIndex].Value, CultureInfo.InvariantCulture);
+
+		/// <summary>
 		/// Resolves placeholders in a revision format string using the current data.
 		/// </summary>
 		/// <param name="format">The revision format string to resolve.</param>
@@ -68,11 +74,11 @@ namespace NetRevisionTask
 			// Simple data fields
 			format = format.Replace("{chash}", RevisionData.CommitHash);
 			format = format.Replace("{CHASH}", RevisionData.CommitHash.ToUpperInvariant());
-			format = Regex.Replace(format, @"\{chash:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash, int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)));
-			format = Regex.Replace(format, @"\{CHASH:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)));
+			format = Regex.Replace(format, @"\{chash:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash, ParseInt(m)));
+			format = Regex.Replace(format, @"\{CHASH:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), ParseInt(m)));
 			format = format.Replace("{revnum}", RevisionData.RevisionNumber.ToString());
-			format = Regex.Replace(format, @"\{revnum\s*-\s*([0-9]+)\}", m => (RevisionData.RevisionNumber - int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)).ToString());
-			format = Regex.Replace(format, @"\{revnum\s*\+\s*([0-9]+)\}", m => (RevisionData.RevisionNumber + int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)).ToString());
+			format = Regex.Replace(format, @"\{revnum\s*-\s*([0-9]+)\}", m => (RevisionData.RevisionNumber - ParseInt(m)).ToString());
+			format = Regex.Replace(format, @"\{revnum\s*\+\s*([0-9]+)\}", m => (RevisionData.RevisionNumber + ParseInt(m)).ToString());
 			format = format.Replace("{!}", RevisionData.IsModified ? "!" : "");
 			format = Regex.Replace(format, @"\{!:(.*?)\}", m => RevisionData.IsModified ? m.Groups[1].Value : "");
 			format = format.Replace("{tz}", RevisionData.CommitTime.ToString("%K"));
@@ -101,6 +107,9 @@ namespace NetRevisionTask
 				tagName = tagName.Substring(1);
 			}
 			format = format.Replace("{semvertag}", GetSemVerTagSpec(tagName));
+			format = format.Replace("{semvertag+chash}", GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, 7)));
+			format = Regex.Replace(format, @"\{semvertag+chash:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, ParseInt(m))));
+			format = Regex.Replace(format, @"\{semvertag+CHASH:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), ParseInt(m))));
 			format = format.Replace("{tag}", GetTagSpec(tagName));
 			format = format.Replace("{tagname}", tagName);
 			format = format.Replace("{tagadd}", RevisionData.CommitsAfterTag.ToString());
@@ -116,7 +125,7 @@ namespace NetRevisionTask
 				commitString = RevisionData.RevisionNumber.ToString();
 			}
 			format = format.Replace("{commit}", commitString);
-			format = Regex.Replace(format, @"\{commit:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash, int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)));
+			format = Regex.Replace(format, @"\{commit:([0-9]+)\}", m => SafeSubstring(RevisionData.CommitHash, ParseInt(m)));
 			format = Regex.Replace(format, @"\{(?:(?:[Xx]|[Bb](?:36)?|d2?)min):.+?\}", FormatTimeScheme);
 
 			// Copyright year
@@ -158,7 +167,7 @@ namespace NetRevisionTask
 			return source.Substring(0, length);
 		}
 
-		private string GetSemVerTagSpec(string tagName)
+		private string GetSemVerTagSpec(string tagName, string preCommitHash = "")
 		{
 			// If the current revision is tagged directly, return the tag name as-is
 			if (RevisionData.CommitsAfterTag == 0 && !string.IsNullOrEmpty(tagName))
@@ -192,6 +201,10 @@ namespace NetRevisionTask
 			if (!string.IsNullOrEmpty(RevisionData.Branch))
 			{
 				preRelease = Regex.Replace(RevisionData.Branch, "[^0-9A-Za-z-]", "-") + "." + preRelease;
+			}
+			if (!string.IsNullOrEmpty(preCommitHash))
+			{
+				preRelease += "+" + preCommitHash;
 			}
 
 			// Increment the patch value and append the branch name (if available) and commits after

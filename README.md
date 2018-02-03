@@ -27,13 +27,19 @@ If you release often and don’t want to manage [semantic version numbers](https
 
 Just install the NuGet package **Unclassified.NetRevisionTask** to your **.NET Framework 4.6** or **.NET Standard 1.6** project in VS 2015 or later and it starts working for you.
 
+If you’re **creating a NuGet package** of your project, make sure to declare this package reference as private in your .csproj so that your final package does not depend on NetRevisionTask, which it really doesn’t.
+
+    <ItemGroup>
+      <PackageReference Include="Unclassified.NetRevisionTask" Version="..." PrivateAssets="all" />
+    </ItemGroup>
+
 ### Default behaviour for Git
 
-If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. Revisions that are not directly tagged are considered a pre-release after the last tag and the branch name and number of commits after the tag will be appended. The abbreviated commit hash is always appended as build info by default. This is a production-ready default that you may want to keep. Examples:
+If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. Revisions that are not directly tagged are considered a pre-release after the last tag and the branch name and number of commits after the tag will be appended, together with the abbreviated commit hash as build info. This is a production-ready default that you may want to keep. Examples:
 
 * 0.0.1-master.1+abcdef1
 * 1.0.1-feature-20.3+abcdef1
-* 1.2+abcdef1
+* 1.2
 
 ### Default behaviour for Subversion
 
@@ -52,6 +58,7 @@ Configuration of the version scheme is done through MSBuild properties defined i
 Example:
 
     <PropertyGroup>
+      <NrtRevisionFormat>{semvertag}</NrtRevisionFormat>
       <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
       <NrtResolveInformationalAttribute>true</NrtResolveInformationalAttribute>
       <NrtResolveCopyright>true</NrtResolveCopyright>
@@ -62,6 +69,10 @@ Example:
     </PropertyGroup>
 
 The following MSBuild properties are supported:
+
+**NrtRevisionFormat**: string, default: automatic.
+
+The revision format template. This is automatically detected from the AssemblyInfo file in your project, if it exists. It can be overridden for .NET Core/Standard projects.
 
 **NrtResolveSimpleAttributes**: boolean, default: true.
 
@@ -121,7 +132,13 @@ The following data field placeholders are supported:
 
 **`{branch:<sep>:<ref>}`**: Branch name, if not `<ref>` or empty, separated by `<sep>`, otherwise empty.
 
-**`{semvertag}`**: Semantic version based on the most recent matching tag name. Revisions that are not directly tagged are considered a pre-release after the last tag (the patch value is incremented by 1) and the branch name and number of commits after the tag will be appended. This is part of the default format for Git repositories.
+**`{semvertag}`**: Semantic version based on the most recent matching tag name. Revisions that are not directly tagged are considered a pre-release after the last tag (the patch value is incremented by 1) and the branch name and number of commits after the tag will be appended.
+
+**`{semvertag+chash}`**: Semantic version based on the most recent matching tag name, see `{semvertag}`. Pre-releases also have the abbreviated commit hash appended after a plus (`+`) sign as build info. This is the default format for Git repositories.
+
+**`{semvertag+chash:<length>}`**: Same as `{semvertag+chash}` but with the commit hash truncated to the specified length instead of the default 7.
+
+**`{semvertag+CHASH:<length>}`**: Same as `{semvertag+chash:<length>}` but with the commit hash in upper case.
 
 **`{tag}`**: Most recent matching tag name, with additional info.
 

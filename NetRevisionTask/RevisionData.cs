@@ -142,7 +142,7 @@ namespace NetRevisionTask
 			if (!string.IsNullOrEmpty(CommitHash) && !Regex.IsMatch(CommitHash, "^0+$"))
 			{
 				logger?.Trace("No format available, using default format for commit hash.");
-				return "{semvertag}+{chash:7}";
+				return "{semvertag+chash}";
 			}
 			if (RevisionNumber > 0)
 			{

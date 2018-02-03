@@ -39,9 +39,12 @@
 
     <!--
       Set additional properties based on what the task returned.
+      PackageVersion must be set, otherwise the NuGet package version will be what Version was
+      before NetRevisionTask has changed it.
     -->
     <PropertyGroup>
       <FileVersion>$(Version)</FileVersion>
+      <PackageVersion>$(InformationalVersion)</PackageVersion>
     </PropertyGroup>
   </Target>
 

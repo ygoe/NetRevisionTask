@@ -91,9 +91,9 @@ namespace NetRevisionTask.VcsProviders
 
 			// Queries the commit hash and time from the latest log entry
 			string gitLogFormat = "%H %ci %ai%n%cN%n%cE%n%aN%n%aE";
-			Logger?.Trace($"Executing: git log -n 1 --format=format:\"{gitLogFormat}\"");
+			Logger?.Trace($@"Executing: git log -n 1 --format=format:""{gitLogFormat}""");
 			Logger?.Trace("  WorkingDirectory: " + path);
-			var psi = new ProcessStartInfo(gitExec, $"log -n 1 --format=format:\"{gitLogFormat}\"")
+			var psi = new ProcessStartInfo(gitExec, $@"log -n 1 --format=format:""{gitLogFormat}""")
 			{
 				WorkingDirectory = path,
 				RedirectStandardOutput = true,
@@ -225,7 +225,7 @@ namespace NetRevisionTask.VcsProviders
 				string tagMatchOption = "";
 				if (!string.IsNullOrWhiteSpace(tagMatch) && tagMatch != "*")
 				{
-					tagMatchOption = " --match \"" + tagMatch + "\"";
+					tagMatchOption = $@" --match ""{tagMatch}""";
 				}
 				Logger?.Trace("Executing: git describe --tags --first-parent --long" + tagMatchOption);
 				Logger?.Trace($"  WorkingDirectory: {path}");
@@ -315,7 +315,7 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{dir}\" via %PATH%");
+						Logger?.Success($@"Found {gitExeName} in ""{dir}"" via %PATH%");
 						break;
 					}
 				}
@@ -334,7 +334,7 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{loc}\" via HKLM\\{keyPath}\\InstallLocation");
+						Logger?.Success($@"Found {gitExeName} in ""{loc}"" via HKLM\\{keyPath}\\InstallLocation");
 					}
 				}
 			}
@@ -350,7 +350,7 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{loc}\" via HKLM\\{keyPath}\\InstallLocation");
+						Logger?.Success($@"Found {gitExeName} in ""{loc}"" via HKLM\\{keyPath}\\InstallLocation");
 					}
 				}
 			}
@@ -366,7 +366,7 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{loc}\" via HKCU\\{keyPath}\\InstallLocation");
+						Logger?.Success($@"Found {gitExeName} in ""{loc}"" via HKCU\\{keyPath}\\InstallLocation");
 					}
 				}
 			}
@@ -380,14 +380,14 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{dir}\" via %ProgramFiles%\\git*");
+						Logger?.Success($@"Found {gitExeName} in ""{dir}"" via %ProgramFiles%\\git*");
 						break;
 					}
 					testPath = Path.Combine(dir, "bin", gitExeName);
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{dir}\" via %ProgramFiles%\\git*\\bin");
+						Logger?.Success($@"Found {gitExeName} in ""{dir}"" via %ProgramFiles%\\git*\\bin");
 						break;
 					}
 				}
@@ -402,14 +402,14 @@ namespace NetRevisionTask.VcsProviders
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{dir}\" via %ProgramFiles(x86)%\\git*");
+						Logger?.Success($@"Found {gitExeName} in ""{dir}"" via %ProgramFiles(x86)%\\git*");
 						break;
 					}
 					testPath = Path.Combine(dir, "bin", gitExeName);
 					if (File.Exists(testPath))
 					{
 						git = testPath;
-						Logger?.Success($"Found {gitExeName} in \"{dir}\" via %ProgramFiles(x86)%\\git*\\bin");
+						Logger?.Success($@"Found {gitExeName} in ""{dir}"" via %ProgramFiles(x86)%\\git*\\bin");
 						break;
 					}
 				}
@@ -423,7 +423,7 @@ namespace NetRevisionTask.VcsProviders
 				if (File.Exists(testPath))
 				{
 					git = testPath;
-					Logger?.Success($"Found {gitExeName} in \"{dir}\"");
+					Logger?.Success($@"Found {gitExeName} in ""{dir}""");
 				}
 			}
 
@@ -435,7 +435,7 @@ namespace NetRevisionTask.VcsProviders
 				if (File.Exists(testPath))
 				{
 					git = testPath;
-					Logger?.Success($"Found {gitExeName} in \"{dir}\"");
+					Logger?.Success($@"Found {gitExeName} in ""{dir}""");
 				}
 			}
 
@@ -447,7 +447,7 @@ namespace NetRevisionTask.VcsProviders
 				if (File.Exists(testPath))
 				{
 					git = testPath;
-					Logger?.Success($"Found {gitExeName} in \"{dir}\"");
+					Logger?.Success($@"Found {gitExeName} in ""{dir}""");
 				}
 			}
 			return git;

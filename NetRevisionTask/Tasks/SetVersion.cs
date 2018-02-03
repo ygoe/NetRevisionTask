@@ -65,8 +65,8 @@ namespace NetRevisionTask.Tasks
 		public bool ResolveCopyright { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the determined revision ID should be printed
-		/// during the build with higher importance than normal, so it can be seen more easily.
+		/// Gets or sets a value indicating whether the determined revision ID is printed during the
+		/// build with higher importance than normal, so it can be seen more easily.
 		/// </summary>
 		public bool ShowRevision { get; set; }
 

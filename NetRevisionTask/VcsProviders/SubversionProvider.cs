@@ -261,7 +261,7 @@ namespace NetRevisionTask.VcsProviders
 					svn = Path.Combine(dir, svnExeName);
 					if (File.Exists(svn))
 					{
-						Logger?.Success($"Found {svnExeName} in \"{dir}\" via %PATH%");
+						Logger?.Success($@"Found {svnExeName} in ""{dir}"" via %PATH%");
 						break;
 					}
 				}
@@ -284,7 +284,7 @@ namespace NetRevisionTask.VcsProviders
 					}
 					else
 					{
-						Logger?.Success($"Found {svnExeName} in \"{loc}\" via HKLM\\{keyPath}\\Directory");
+						Logger?.Success($@"Found {svnExeName} in ""{loc}"" via HKLM\\{keyPath}\\Directory");
 					}
 				}
 			}
@@ -303,7 +303,7 @@ namespace NetRevisionTask.VcsProviders
 					}
 					else
 					{
-						Logger?.Success($"Found {svnExeName} in \"{loc}\" via HKLM\\{keyPath}\\UninstallString");
+						Logger?.Success($@"Found {svnExeName} in ""{loc}"" via HKLM\\{keyPath}\\UninstallString");
 					}
 				}
 			}
@@ -320,7 +320,7 @@ namespace NetRevisionTask.VcsProviders
 					}
 					else
 					{
-						Logger?.Success($"Found {svnExeName} in \"{loc}\" via HKLM\\{keyPath}\\InstallLocation");
+						Logger?.Success($@"Found {svnExeName} in ""{loc}"" via HKLM\\{keyPath}\\InstallLocation");
 					}
 				}
 			}
@@ -339,7 +339,7 @@ namespace NetRevisionTask.VcsProviders
 					}
 					else
 					{
-						Logger?.Success($"Found {svnExeName} in \"{loc}\" via HKLM\\{keyPath}\\UninstallString");
+						Logger?.Success($@"Found {svnExeName} in ""{loc}"" via HKLM\\{keyPath}\\UninstallString");
 					}
 				}
 			}
@@ -356,7 +356,7 @@ namespace NetRevisionTask.VcsProviders
 					}
 					else
 					{
-						Logger?.Success($"Found {svnExeName} in \"{loc}\" via HKLM\\{keyPath}\\InstallLocation");
+						Logger?.Success($@"Found {svnExeName} in ""{loc}"" via HKLM\\{keyPath}\\InstallLocation");
 					}
 				}
 			}
@@ -369,13 +369,13 @@ namespace NetRevisionTask.VcsProviders
 					svn = Path.Combine(dir, svnExeName);
 					if (File.Exists(svn))
 					{
-						Logger?.Success($"Found {svnExeName} in \"{dir}\" via %ProgramFiles%\\*subversion*");
+						Logger?.Success($@"Found {svnExeName} in ""{dir}"" via %ProgramFiles%\\*subversion*");
 						break;
 					}
 					svn = Path.Combine(dir, "bin", svnExeName);
 					if (File.Exists(svn))
 					{
-						Logger?.Success($"Found {svnExeName} in \"{dir}\" via %ProgramFiles%\\*subversion*\\bin");
+						Logger?.Success($@"Found {svnExeName} in ""{dir}"" via %ProgramFiles%\\*subversion*\\bin");
 						break;
 					}
 				}
@@ -390,13 +390,13 @@ namespace NetRevisionTask.VcsProviders
 					svn = Path.Combine(dir, svnExeName);
 					if (File.Exists(svn))
 					{
-						Logger?.Success($"Found {svnExeName} in \"{dir}\" via %ProgramFiles(x86)%\\*subversion*");
+						Logger?.Success($@"Found {svnExeName} in ""{dir}"" via %ProgramFiles(x86)%\\*subversion*");
 						break;
 					}
 					svn = Path.Combine(dir, "bin", svnExeName);
 					if (File.Exists(svn))
 					{
-						Logger?.Success($"Found {svnExeName} in \"{dir}\" via %ProgramFiles(x86)%\\*subversion*\\bin");
+						Logger?.Success($@"Found {svnExeName} in ""{dir}"" via %ProgramFiles(x86)%\\*subversion*\\bin");
 						break;
 					}
 				}

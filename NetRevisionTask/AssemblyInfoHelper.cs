@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ namespace NetRevisionTask
 	{
 		#region Private data
 
+		private string projectDir;
 		private string fileName;
 		private string attrStart;
 		private string attrEnd;
@@ -25,17 +25,18 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Initialises a new instance of the <see cref="AssemblyInfoHelper"/> class.
 		/// </summary>
-		/// <param name="path">The project directory to operate in.</param>
+		/// <param name="projectDir">The project directory to operate in.</param>
 		/// <param name="throwOnMissingFile">Indicates whether an exception is thrown if the AssemblyInfo file was not found.</param>
 		/// <param name="logger">A logger.</param>
-		public AssemblyInfoHelper(string path, bool throwOnMissingFile, ILogger logger)
+		public AssemblyInfoHelper(string projectDir, bool throwOnMissingFile, ILogger logger)
 		{
 			this.logger = logger;
+			this.projectDir = projectDir;
 
-			FindAssemblyInfoFile(path);
+			FindAssemblyInfoFile(projectDir);
 			if (fileName == null && throwOnMissingFile)
 			{
-				throw new FileNotFoundException($@"AssemblyInfo file not found in ""{path}"" or the usual subdirectories.");
+				throw new FileNotFoundException($@"AssemblyInfo file not found in ""{projectDir}"" or the usual subdirectories.");
 			}
 			if (fileName != null)
 			{
@@ -46,6 +47,16 @@ namespace NetRevisionTask
 		#endregion Constructor
 
 		#region Public properties
+
+		/// <summary>
+		/// Gets the source AssemblyInfo file name relative to the project directory.
+		/// </summary>
+		public string FileName => fileName;
+
+		/// <summary>
+		/// Gets the absolute path of the source AssemblyInfo file.
+		/// </summary>
+		public string FullFileName => Path.Combine(projectDir, fileName);
 
 		/// <summary>
 		/// Gets a value indicating whether the AssemblyInfo file was found.
@@ -59,6 +70,7 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Patches the file and injects the revision data.
 		/// </summary>
+		/// <param name="patchedFileDir">The directory to save the patched AssemblyInfo file into, relative to the project directory.</param>
 		/// <param name="rf">The configured revision formatter instance.</param>
 		/// <param name="fallbackFormat">The fallback format if none is defined in the file.</param>
 		/// <param name="simpleAttributes">Indicates whether simple version attributes are processed.</param>
@@ -66,16 +78,19 @@ namespace NetRevisionTask
 		/// <param name="revOnly">Indicates whether only the last number is replaced by the revision number.</param>
 		/// <param name="copyrightAttribute">Indicates whether the copyright year is replaced.</param>
 		/// <param name="echo">Indicates whether the final informational version string is displayed.</param>
-		public void PatchFile(RevisionFormatter rf, string fallbackFormat, bool simpleAttributes, bool informationalAttribute, bool revOnly, bool copyrightAttribute, bool echo)
+		/// <returns>The name of the patched AssemblyInfo file.</returns>
+		public string PatchFile(
+			string patchedFileDir,
+			RevisionFormatter rf,
+			string fallbackFormat,
+			bool simpleAttributes,
+			bool informationalAttribute,
+			bool revOnly,
+			bool copyrightAttribute,
+			bool echo)
 		{
 			logger?.Trace($@"Patching file ""{fileName}""...");
-			string backupFileName = CreateBackup();
-
-			// Read the backup file. If the backup was created earlier, it still contains the source
-			// file while the regular file may have been resolved but not restored before. By
-			// reading the former source file, we get the correct result and can heal the situation
-			// with the next restore run.
-			ReadFileLines(backupFileName);
+			ReadFileLines(FullFileName);
 
 			// Find the revision format for this file
 			revisionFormat = FindRevisionFormat();
@@ -92,22 +107,17 @@ namespace NetRevisionTask
 			if (revisionFormat == null)
 			{
 				// If we don't have a revision format, there's nothing to replace in this file.
-				return;
+				return "";
 			}
 
 			// Process all lines in the file
 			ResolveAllLines(rf, simpleAttributes, informationalAttribute, revOnly, copyrightAttribute, echo);
 
-			// Write back all lines to the file
-			WriteFileLines();
-		}
-
-		/// <summary>
-		/// Restores the file from a backup.
-		/// </summary>
-		public void RestoreFile()
-		{
-			RestoreBackup();
+			// Write all lines to the file
+			string patchedFileName = Path.Combine(patchedFileDir, "Nrt" + Path.GetFileName(fileName));
+			logger?.Trace($@"Writing to file ""{patchedFileName}""...");
+			WriteFileLines(Path.Combine(projectDir, patchedFileName));
+			return patchedFileName;
 		}
 
 		/// <summary>
@@ -116,14 +126,7 @@ namespace NetRevisionTask
 		/// <returns>The revision format, or null if none is defined.</returns>
 		public string GetRevisionFormat()
 		{
-			// Prefer the backup file if it exists
-			string fileToRead = GetBackupFileName();
-			if (!File.Exists(fileToRead))
-			{
-				fileToRead = fileName;
-			}
-
-			ReadFileLines(fileToRead);
+			ReadFileLines(FullFileName);
 			return FindRevisionFormat();
 		}
 
@@ -154,23 +157,23 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Finds the AssemblyInfo file in the specified directory.
 		/// </summary>
-		/// <param name="path">The directory to search in.</param>
-		private void FindAssemblyInfoFile(string path)
+		/// <param name="projectDir">The project directory to search in.</param>
+		private void FindAssemblyInfoFile(string projectDir)
 		{
-			fileName = Path.Combine(path, "Properties", "AssemblyInfo.cs");
-			if (!File.Exists(fileName))
+			fileName = Path.Combine("Properties", "AssemblyInfo.cs");
+			if (!File.Exists(FullFileName))
 			{
-				fileName = Path.Combine(path, "My Project", "AssemblyInfo.vb");
+				fileName = Path.Combine("My Project", "AssemblyInfo.vb");
 			}
-			if (!File.Exists(fileName))
+			if (!File.Exists(FullFileName))
 			{
-				fileName = Path.Combine(path, "AssemblyInfo.cs");
+				fileName = "AssemblyInfo.cs";
 			}
-			if (!File.Exists(fileName))
+			if (!File.Exists(FullFileName))
 			{
-				fileName = Path.Combine(path, "AssemblyInfo.vb");
+				fileName = "AssemblyInfo.vb";
 			}
-			if (!File.Exists(fileName))
+			if (!File.Exists(FullFileName))
 			{
 				fileName = null;
 			}
@@ -201,52 +204,6 @@ namespace NetRevisionTask
 		#region File access
 
 		/// <summary>
-		/// Gets the name of the backup file for the current file.
-		/// </summary>
-		/// <returns>The backup file name.</returns>
-		private string GetBackupFileName()
-		{
-			return fileName + ".bak";
-		}
-
-		/// <summary>
-		/// Creates a backup of the file if it does not already exist.
-		/// </summary>
-		/// <returns>The name of the backup file.</returns>
-		private string CreateBackup()
-		{
-			string backup = GetBackupFileName();
-			if (!File.Exists(backup))
-			{
-				File.Copy(fileName, backup);
-				logger?.Trace($@"Created backup to ""{Path.GetFileName(backup)}"".");
-			}
-			else
-			{
-				logger?.Warning($@"Backup ""{Path.GetFileName(backup)}"" already exists, skipping.");
-			}
-			return backup;
-		}
-
-		/// <summary>
-		/// Restores the file from a backup if it exists.
-		/// </summary>
-		private void RestoreBackup()
-		{
-			string backup = GetBackupFileName();
-			if (File.Exists(backup))
-			{
-				File.Delete(fileName);
-				File.Move(backup, fileName);
-				logger?.Trace($@"Restored backup file ""{backup}"".");
-			}
-			else
-			{
-				logger?.Warning($@"Backup file ""{backup}"" does not exist, skipping.");
-			}
-		}
-
-		/// <summary>
 		/// Reads all lines of a file.
 		/// </summary>
 		/// <param name="readFileName">The name of the file to read.</param>
@@ -258,14 +215,15 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Writes all lines into the file.
 		/// </summary>
-		private void WriteFileLines()
+		/// <param name="patchedFileName">The name of the patched file to write to.</param>
+		private void WriteFileLines(string patchedFileName)
 		{
 			int retryCounter = 20;
 			while (true)
 			{
 				try
 				{
-					File.WriteAllLines(fileName, lines, Encoding.UTF8);
+					File.WriteAllLines(patchedFileName, lines, Encoding.UTF8);
 					break;
 				}
 				catch (IOException)
@@ -374,7 +332,7 @@ namespace NetRevisionTask
 					{
 						lines[i] = match.Groups[1].Value + truncVersion + match.Groups[3].Value;
 						logger?.Success("Found AssemblyVersion attribute.");
-						logger?.Trace("  Replaced \"" + match.Groups[2].Value + "\" with \"" + truncVersion + "\".");
+						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{truncVersion}"".");
 					}
 					match = Regex.Match(
 						lines[i],
@@ -384,7 +342,7 @@ namespace NetRevisionTask
 					{
 						lines[i] = match.Groups[1].Value + truncVersion + match.Groups[3].Value;
 						logger?.Success("Found AssemblyFileVersion attribute.");
-						logger?.Trace("  Replaced \"" + match.Groups[2].Value + "\" with \"" + truncVersion + "\".");
+						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{truncVersion}"".");
 					}
 				}
 
@@ -402,7 +360,7 @@ namespace NetRevisionTask
 						string revisionId = rf.Resolve(match.Groups[2].Value);
 						lines[i] = match.Groups[1].Value + revisionId + match.Groups[3].Value;
 						logger?.Success("Found AssemblyInformationalVersion attribute.");
-						logger?.Trace("  Replaced \"" + match.Groups[2].Value + "\" with \"" + revisionId + "\".");
+						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{revisionId}"".");
 						if (echo)
 						{
 							Console.WriteLine("Version: " + revisionId);
@@ -423,7 +381,7 @@ namespace NetRevisionTask
 						string copyrightText = rf.Resolve(match.Groups[2].Value);
 						lines[i] = match.Groups[1].Value + copyrightText + match.Groups[3].Value;
 						logger?.Success("Found AssemblyCopyright attribute.");
-						logger?.Trace("  Replaced \"" + match.Groups[2].Value + "\" with \"" + copyrightText + "\".");
+						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{copyrightText}"".");
 					}
 				}
 			}

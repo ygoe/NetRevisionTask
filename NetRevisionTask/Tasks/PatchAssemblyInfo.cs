@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Build.Framework;
 using MSBuildTask = Microsoft.Build.Utilities.Task;
 
 namespace NetRevisionTask.Tasks
@@ -20,6 +21,12 @@ namespace NetRevisionTask.Tasks
 		/// Gets or sets the project directory.
 		/// </summary>
 		public string ProjectDir { get; set; }
+
+		/// <summary>
+		/// Gets or sets the intermediate output path of the build process. The patched AssemblyInfo
+		/// file will be saved there.
+		/// </summary>
+		public string IntermediateOutputPath { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether MSBuild generates the assembly info data.
@@ -88,6 +95,22 @@ namespace NetRevisionTask.Tasks
 
 		#endregion Properties
 
+		#region Task output properties
+
+		/// <summary>
+		/// Gets or sets the name of the source AssemblyInfo file.
+		/// </summary>
+		[Output]
+		public string SourceAssemblyInfo { get; set; }
+
+		/// <summary>
+		/// Gets or sets the name of the patched AssemblyInfo file.
+		/// </summary>
+		[Output]
+		public string PatchedAssemblyInfo { get; set; }
+
+		#endregion Task output properties
+
 		#region Main task execution
 
 		/// <summary>
@@ -125,7 +148,16 @@ namespace NetRevisionTask.Tasks
 			try
 			{
 				var aih = new AssemblyInfoHelper(ProjectDir, true, logger);
-				aih.PatchFile(rf, RevisionFormat, ResolveSimpleAttributes, ResolveInformationalAttribute, RevisionNumberOnly, ResolveCopyright, ShowRevision);
+				SourceAssemblyInfo = aih.FileName;
+				PatchedAssemblyInfo = aih.PatchFile(
+					IntermediateOutputPath,
+					rf,
+					RevisionFormat,
+					ResolveSimpleAttributes,
+					ResolveInformationalAttribute,
+					RevisionNumberOnly,
+					ResolveCopyright,
+					ShowRevision);
 			}
 			catch (FormatException ex)
 			{

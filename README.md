@@ -52,11 +52,13 @@ Configuration of the version scheme is done through MSBuild properties defined i
 Example:
 
     <PropertyGroup>
-        <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
-        <NrtResolveInformationalAttribute>true</NrtResolveInformationalAttribute>
-        <NrtResolveCopyright>true</NrtResolveCopyright>
-        <NrtTagMatch>v[0-9]*</NrtTagMatch>
-        <NrtRemoveTagV>true</NrtRemoveTagV>
+      <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
+      <NrtResolveInformationalAttribute>true</NrtResolveInformationalAttribute>
+      <NrtResolveCopyright>true</NrtResolveCopyright>
+      <NrtTagMatch>v[0-9]*</NrtTagMatch>
+      <NrtRemoveTagV>true</NrtRemoveTagV>
+      <NrtRequiredVcs>git</NrtRequiredVcs>
+      <NrtShowRevision>true</NrtShowRevision>
     </PropertyGroup>
 
 The following MSBuild properties are supported:
@@ -80,6 +82,14 @@ The pattern of tag names to match when looking for version tags. These tag names
 **NrtRemoveTagV**: boolean, default: true.
 
 Specifies whether the “v” prefix of a matching version tag should be removed to determine its version. This should usually not be disabled.
+
+**NrtRequiredVcs**: string, default: “”.
+
+Specifies the name of the VCS that is expected to be found in the project directory. Can be “git” or “svn” (`IVcsProvider.Name`).
+
+**NrtShowRevision**: boolean, default: false.
+
+Specifies whether the determined revision ID is printed during the build with higher importance than normal, so it can be seen more easily. When patching the AssemblyInfo file, it is also displayed to the console.
 
 ### Revision format
 
@@ -220,21 +230,6 @@ Git (for Windows) CLI must be installed using the setup for Windows or in one of
 
 SVN CLI (svn and svnversion) must be available on the system. This is included in the “CLI” option of TortoiseSVN. Other locations are considered (see source code).
 
-## License: MIT
+## License
 
-Copyright © 2018, Yves Goergen, http://unclassified.software
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
-associated documentation files (the “Software”), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or
-substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+[MIT license](https://github.com/ygoe/NetRevisionTask/blob/master/LICENSE)

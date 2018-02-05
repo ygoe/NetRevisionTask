@@ -116,6 +116,7 @@ namespace NetRevisionTask
 			// Write all lines to the file
 			string patchedFileName = Path.Combine(patchedFileDir, "Nrt" + Path.GetFileName(fileName));
 			logger?.Trace($@"Writing to file ""{patchedFileName}""...");
+			Directory.CreateDirectory(Path.Combine(projectDir, patchedFileDir));
 			WriteFileLines(Path.Combine(projectDir, patchedFileName));
 			return patchedFileName;
 		}

@@ -8,7 +8,7 @@
     <!-- Change the default location where NuGet will put the build output -->
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
 
-    <VersionPrefix>0.2.2</VersionPrefix>
+    <VersionPrefix>0.2.3</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -23,10 +23,11 @@
     <PackageProjectUrl>https://unclassified.software/apps/netrevisiontask</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/ygoe/NetRevisionTask/master/netrevisiontask_64.png</PackageIconUrl>
     <PackageTags>build version management git svn subversion msbuild vcs</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' != 'Release'">
     <!-- Sets the debug pre-release version automatically -->
-    <VersionSuffix>dev.$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
+    <VersionSuffix>alpha.$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">

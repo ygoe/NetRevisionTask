@@ -98,7 +98,8 @@ namespace NetRevisionTask.VcsProviders
 				WorkingDirectory = path,
 				RedirectStandardOutput = true,
 				//StandardOutputEncoding = Encoding.Default,   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
-				UseShellExecute = false
+				UseShellExecute = false,
+				CreateNoWindow = true
 			};
 			var process = Process.Start(psi);
 			string line = null;
@@ -150,7 +151,8 @@ namespace NetRevisionTask.VcsProviders
 					WorkingDirectory = path,
 					RedirectStandardOutput = true,
 					//StandardOutputEncoding = Encoding.Default,   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
-					UseShellExecute = false
+					UseShellExecute = false,
+					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
 				line = null;
@@ -173,7 +175,8 @@ namespace NetRevisionTask.VcsProviders
 					WorkingDirectory = path,
 					RedirectStandardOutput = true,
 					//StandardOutputEncoding = Encoding.Default,   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
-					UseShellExecute = false
+					UseShellExecute = false,
+					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
 				line = null;
@@ -235,7 +238,8 @@ namespace NetRevisionTask.VcsProviders
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
 					//StandardOutputEncoding = Encoding.Default,   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
-					UseShellExecute = false
+					UseShellExecute = false,
+					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
 				line = null;
@@ -265,7 +269,8 @@ namespace NetRevisionTask.VcsProviders
 					WorkingDirectory = path,
 					RedirectStandardOutput = true,
 					//StandardOutputEncoding = Encoding.Default,   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
-					UseShellExecute = false
+					UseShellExecute = false,
+					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
 				line = null;

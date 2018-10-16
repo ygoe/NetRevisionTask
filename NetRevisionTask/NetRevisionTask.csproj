@@ -8,8 +8,8 @@
     <!-- Change the default location where NuGet will put the build output -->
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
 
-    <VersionPrefix>0.2.4</VersionPrefix>
-    <VersionSuffix>beta</VersionSuffix>
+    <VersionPrefix>0.2.5</VersionPrefix>
+    <!--VersionSuffix>beta</VersionSuffix-->
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Unclassified.NetRevisionTask</PackageId>

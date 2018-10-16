@@ -177,7 +177,14 @@ namespace NetRevisionTask
 
 			// The current revision is not tagged directly, make a pre-release version
 			int count = RevisionData.CommitsAfterTag;
-			if (!Regex.IsMatch(tagName ?? "", @"^[0-9]+(\.[0-9]+(\.[0-9]+)?)?$"))
+			string tagSuffix = "";
+			var match = Regex.Match(tagName ?? "", @"^([0-9]+(?:\.[0-9]+(?:\.[0-9]+)?)?)(?:-(.+))?$");
+			if (match.Success)
+			{
+				tagName = match.Groups[1].Value;
+				tagSuffix = match.Groups[2].Value;
+			}
+			else
 			{
 				// The provided tag name is not SemVer-compliant and cannot be processed.
 				// This is just handled as if no tag was set at all (which may be the case).
@@ -201,6 +208,17 @@ namespace NetRevisionTask
 			if (!string.IsNullOrEmpty(RevisionData.Branch))
 			{
 				preRelease = Regex.Replace(RevisionData.Branch, "[^0-9A-Za-z-]", "-") + "." + preRelease;
+				if (!string.IsNullOrEmpty(tagSuffix))
+				{
+					preRelease = tagSuffix + "-" + preRelease;
+				}
+			}
+			else
+			{
+				if (!string.IsNullOrEmpty(tagSuffix))
+				{
+					preRelease = tagSuffix + "." + preRelease;
+				}
 			}
 			if (!string.IsNullOrEmpty(preCommitHash))
 			{

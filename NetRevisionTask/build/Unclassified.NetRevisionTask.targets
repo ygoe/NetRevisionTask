@@ -15,6 +15,7 @@
       <NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
       <NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
       <NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
+      <NrtProcessAnyProperty Condition="'$(NrtProcessAnyProperty)' == ''">false</NrtProcessAnyProperty>
     </PropertyGroup>
   </Target>
 
@@ -31,7 +32,8 @@
       RemoveTagV="$(NrtRemoveTagV)"
       ResolveCopyright="$(NrtResolveCopyright)"
       Copyright="$(Copyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ProcessAnyProperty="$(NrtProcessAnyProperty)">
       <Output TaskParameter="Version" PropertyName="Version"/>
       <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion"/>
       <Output TaskParameter="Copyright" PropertyName="Copyright"/>
@@ -66,7 +68,8 @@
       ResolveInformationalAttribute="$(NrtResolveInformationalAttribute)"
       RevisionNumberOnly="$(NrtRevisionNumberOnly)"
       ResolveCopyright="$(NrtResolveCopyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ProcessAnyProperty="$(NrtProcessAnyProperty)">
       <Output TaskParameter="SourceAssemblyInfo" PropertyName="NrtSourceAssemblyInfo"/>
       <Output TaskParameter="PatchedAssemblyInfo" PropertyName="NrtPatchedAssemblyInfo"/>
     </PatchAssemblyInfo>

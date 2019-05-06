@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetRevisionTask
+﻿namespace NetRevisionTask
 {
 	/// <summary>
 	/// An interface that is used for logging internal and error events.

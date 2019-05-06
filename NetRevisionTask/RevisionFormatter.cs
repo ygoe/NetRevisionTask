@@ -11,14 +11,14 @@ namespace NetRevisionTask
 	{
 		#region Static data
 
-		private static DateTimeOffset buildTime = DateTimeOffset.Now;
+		private static readonly DateTimeOffset buildTime = DateTimeOffset.Now;
 
 		/// <summary>
 		/// Alphabet for the base-28 encoding. This uses the digits 0–9 and all characters a–z that
 		/// are no vowels and have a low chance of being confused with digits or each other when
 		/// hand-written. Omitting vowels avoids generating profane words.
 		/// </summary>
-		private static char[] base28Alphabet = new char[]
+		private static readonly char[] base28Alphabet = new char[]
 		{
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'b', 'c', 'd', 'f', 'g', 'h', 'j',
 			'k', 'm', 'n', 'p', 'q', 'r', 't', 'v', 'w', 'x', 'y'
@@ -28,7 +28,7 @@ namespace NetRevisionTask
 		/// Alphabet for the base-x-encoding up to 36. This uses the digits 0–9 and all characters
 		/// a–z as an extension to hexadecimal numbers.
 		/// </summary>
-		private static char[] base36Alphabet = new char[]
+		private static readonly char[] base36Alphabet = new char[]
 		{
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 			'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
@@ -108,8 +108,13 @@ namespace NetRevisionTask
 			}
 			format = format.Replace("{semvertag}", GetSemVerTagSpec(tagName));
 			format = format.Replace("{semvertag+chash}", GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, 7)));
-			format = Regex.Replace(format, @"\{semvertag+chash:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, ParseInt(m))));
-			format = Regex.Replace(format, @"\{semvertag+CHASH:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), ParseInt(m))));
+			format = Regex.Replace(format, @"\{semvertag\+chash:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, ParseInt(m))));
+			format = Regex.Replace(format, @"\{semvertag\+CHASH:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), ParseInt(m))));
+			format = Regex.Replace(format, @"\{semvertag:(.+?):\+chash:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, ParseInt(m, 2)), m.Groups[1].Value));
+			format = Regex.Replace(format, @"\{semvertag:(.+?):\+CHASH:([0-9]+)\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash.ToUpperInvariant(), ParseInt(m, 2)), m.Groups[1].Value));
+			format = Regex.Replace(format, @"\{semvertag:(.+?):\+chash\}", m => GetSemVerTagSpec(tagName, SafeSubstring(RevisionData.CommitHash, 7), m.Groups[1].Value));
+			format = Regex.Replace(format, @"\{semvertag:(.+?)\}", m => GetSemVerTagSpec(tagName, "", m.Groups[1].Value));
+
 			format = format.Replace("{tag}", GetTagSpec(tagName));
 			format = format.Replace("{tagname}", tagName);
 			format = format.Replace("{tagadd}", RevisionData.CommitsAfterTag.ToString());
@@ -167,7 +172,7 @@ namespace NetRevisionTask
 			return source.Substring(0, length);
 		}
 
-		private string GetSemVerTagSpec(string tagName, string preCommitHash = "")
+		private string GetSemVerTagSpec(string tagName, string preCommitHash = "", string defaultBranchName = "")
 		{
 			// If the current revision is tagged directly, return the tag name as-is
 			if (RevisionData.CommitsAfterTag == 0 && !string.IsNullOrEmpty(tagName))
@@ -203,31 +208,39 @@ namespace NetRevisionTask
 			}
 
 			string[] values = tagName.Split('.');
+			int majorValue = int.Parse(values[0]);
+			int minorValue = int.Parse(values[1]);
 			int patchValue = int.Parse(values[2]);
 			string preRelease = count.ToString();
-			if (!string.IsNullOrEmpty(RevisionData.Branch))
+			if (!string.IsNullOrEmpty(RevisionData.Branch) &&
+				RevisionData.Branch != defaultBranchName)
 			{
 				preRelease = Regex.Replace(RevisionData.Branch, "[^0-9A-Za-z-]", "-") + "." + preRelease;
+				// Example result: 1.0.1-master.4
 				if (!string.IsNullOrEmpty(tagSuffix))
 				{
 					preRelease = tagSuffix + "-" + preRelease;
+					// Example result: 1.0.1-beta-master.4
 				}
 			}
 			else
 			{
+				// Example result: 1.0.1-4
 				if (!string.IsNullOrEmpty(tagSuffix))
 				{
 					preRelease = tagSuffix + "." + preRelease;
+					// Example result: 1.0.1-beta.4
 				}
 			}
 			if (!string.IsNullOrEmpty(preCommitHash))
 			{
+				// The commit hash is always added to the end, no matter what we have until now
 				preRelease += "+" + preCommitHash;
 			}
 
 			// Increment the patch value and append the branch name (if available) and commits after
 			// the tag as pre-release suffix
-			return values[0] + "." + values[1] + "." + (patchValue + 1) + "-" + preRelease;
+			return majorValue + "." + minorValue + "." + (patchValue + 1) + "-" + preRelease;
 		}
 
 		private string GetTagSpec(string tagName)

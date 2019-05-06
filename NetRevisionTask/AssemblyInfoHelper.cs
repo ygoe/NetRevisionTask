@@ -10,13 +10,13 @@ namespace NetRevisionTask
 	{
 		#region Private data
 
-		private string projectDir;
+		private readonly ILogger logger;
+		private readonly string projectDir;
 		private string fileName;
 		private string attrStart;
 		private string attrEnd;
 		private string[] lines;
 		private string revisionFormat;
-		private ILogger logger;
 
 		#endregion Private data
 

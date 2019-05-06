@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetRevisionTask.VcsProviders
+﻿namespace NetRevisionTask.VcsProviders
 {
 	/// <summary>
 	/// An interface that provides all methods required to interact with a version control system.

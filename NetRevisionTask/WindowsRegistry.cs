@@ -104,8 +104,10 @@ namespace NetRevisionTask
 			StringBuilder lpData,
 			ref int lpcbData);
 
-		private static UIntPtr HKEY_LOCAL_MACHINE = new UIntPtr(0x80000002u);
-		private static UIntPtr HKEY_CURRENT_USER = new UIntPtr(0x80000001u);
+#pragma warning disable IDE1006 // Naming
+		private static readonly UIntPtr HKEY_LOCAL_MACHINE = new UIntPtr(0x80000002u);
+		private static readonly UIntPtr HKEY_CURRENT_USER = new UIntPtr(0x80000001u);
+#pragma warning restore IDE1006 // Naming
 
 		private const int KEY_READ = 0x20019;
 		private const int KEY_WOW64_64KEY = 0x0100;

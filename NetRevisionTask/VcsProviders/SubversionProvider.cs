@@ -11,11 +11,11 @@ namespace NetRevisionTask.VcsProviders
 	{
 		#region Private data
 
-		private string svnExeName;
-		private string svnversionExeName;
+		private readonly bool isWindows;
+		private readonly string svnExeName;
+		private readonly string svnversionExeName;
 		private string svnExec;
 		private string svnversionExec;
-		private bool isWindows;
 
 		#endregion Private data
 

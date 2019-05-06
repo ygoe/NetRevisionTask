@@ -10,9 +10,9 @@ namespace NetRevisionTask.VcsProviders
 	{
 		#region Private data
 
-		private string gitExeName;
+		private readonly bool isWindows;
+		private readonly string gitExeName;
 		private string gitExec;
-		private bool isWindows;
 
 		#endregion Private data
 

@@ -140,6 +140,14 @@ The following data field placeholders are supported:
 
 **`{semvertag+CHASH:<length>}`**: Same as `{semvertag+chash:<length>}` but with the commit hash in upper case.
 
+**`{semvertag:<defaultbranch>}`**: Same as `{semvertag}` but with the branch name left out if it is equal to `<defaultbranch>`.
+
+**`{semvertag:<defaultbranch>:+chash}`**: Same as `{semvertag+chash}` but with the branch name left out if it is equal to `<defaultbranch>`.
+
+**`{semvertag:<defaultbranch>:+chash:<length>}`**: Same as `{semvertag+chash:<length>}` but with the branch name left out if it is equal to `<defaultbranch>`.
+
+**`{semvertag:<defaultbranch>:+CHASH:<length>}`**: Same as `{semvertag+CHASH:<length>}` but with the branch name left out if it is equal to `<defaultbranch>`.
+
 **`{tag}`**: Most recent matching tag name, with additional info.
 
 **`{tagname}`**: Most recent matching tag name only.

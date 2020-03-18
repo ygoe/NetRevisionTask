@@ -53,7 +53,7 @@ If not configured otherwise, the revision number is used as the patch number. Yo
 
 ### MSBuild properties
 
-Configuration of the version scheme is done through MSBuild properties defined in the project file to which the NuGet package was added. If you have multiple projects in your solution, you’d basically have to repeat these steps for each project, or you could factor them out into a separate .props file and import that into each project. This also applies to classic-style projects, even though editing the project file is a bit more involved.
+Configuration of the version scheme is done through MSBuild properties defined in the project file to which the NuGet package was added. If you have multiple projects in your solution, you’d basically have to repeat these steps for each project, or you could factor them out into a separate .props file and import that into each project or you can use [Directory.Build.props](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2019#directorybuildprops-and-directorybuildtargets). This also applies to classic-style projects, even though editing the project file is a bit more involved.
 
 Example:
 

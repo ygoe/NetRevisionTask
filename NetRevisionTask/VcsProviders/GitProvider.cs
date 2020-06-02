@@ -224,6 +224,27 @@ namespace NetRevisionTask.VcsProviders
 					}
 				}
 
+				if (data.Branch == "HEAD" && Environment.GetEnvironmentVariable("TF_BUILD") == "True")
+				{
+					// Azure Pipelines runner uses detached HEAD so the normal Git command will always return
+					// "HEAD" instead of the actual branch name.
+
+					// Use Azure Pipelines provided environment variables instead if the available data is
+					// plausible.
+					string buildSourceBranch = Environment.GetEnvironmentVariable("BUILD_SOURCEBRANCH");
+					const string headsPrefix = "refs/heads/";
+					if (!string.IsNullOrEmpty(buildSourceBranch) && buildSourceBranch.StartsWith(headsPrefix))
+					{
+						Logger?.Trace("Reading branch name from environment variable: BUILD_SOURCEBRANCH");
+						data.Branch = buildSourceBranch.Substring(headsPrefix.Length);
+					}
+					else
+					{
+						Logger?.Trace("No branch name available in CI environment");
+						data.Branch = "";
+					}
+				}
+
 				// Query the most recent matching tag
 				string tagMatchOption = "";
 				if (!string.IsNullOrWhiteSpace(tagMatch) && tagMatch != "*")

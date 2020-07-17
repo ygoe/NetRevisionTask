@@ -27,6 +27,8 @@ If you release often and don’t want to manage [semantic version numbers](https
 
 Just install the NuGet package **Unclassified.NetRevisionTask** to your **.NET Framework 4.6** or **.NET Standard 1.6** project in VS 2015 or later and it starts working for you.
 
+This tool has so far only been tested when building on Windows. It *may* also work when building .NET Core projects on other platforms. If you have any issues with that, please open an issue.
+
 If you’re **creating a NuGet package** of your project, make sure to declare this package reference as private in your .csproj so that your final package does not depend on NetRevisionTask, which it really doesn’t.
 
     <ItemGroup>
@@ -35,11 +37,11 @@ If you’re **creating a NuGet package** of your project, make sure to declare t
 
 ### Default behaviour for Git
 
-If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. Revisions that are not directly tagged are considered a pre-release after the last tag and the branch name and number of commits after the tag will be appended, together with the abbreviated commit hash as build info. This is a production-ready default that you may want to keep. Examples:
+If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. The expected tag name format is “v1.2.3”, with a leading lower-case “v”. (Abbreviated names like “v1” or “v1.2” may also work.) Revisions that are not directly tagged are considered a pre-release after the last version tag and the branch name and number of commits after the tag will be appended, together with the abbreviated commit hash as build info. This is a production-ready default that you may want to keep. Examples:
 
 * 0.0.1-master.1+abcdef1
 * 1.0.1-feature-20.3+abcdef1
-* 1.2
+* 1.2.0
 
 ### Default behaviour for Subversion
 
@@ -222,7 +224,7 @@ For values up to 65535 this lasts over 7 years.
 
 ## Usage in C# source code
 
-The following sample code from the AssemblyInfo.cs file would be resolved as described.
+The following sample code from the AssemblyInfo.cs file would be resolved as described. Defining the desired attributes and their revision formats in this file is the easier and recommended method for classic-style projects (i.e. what existed before .NET Core).
 
     [assembly: AssemblyVersion("0.0")]
     [assembly: AssemblyInformationalVersion("1.{c:15m:2013}-{chash:6}-{c:ymd}")]
@@ -232,9 +234,9 @@ Result:
     [assembly: AssemblyVersion("1.93.42")]
     [assembly: AssemblyInformationalVersion("1.93.42-45d4e3-20130401")]
 
-Only **C#** and **VB.NET** projects and source files can be patched. Other source code language files are not found. This restriction should not apply to new-style simplified projects (like .NET Core).
+Only **C#** and **VB.NET** projects and source files can be patched. Other source code language files will not be found. This restriction should not apply to new-style simplified projects (like .NET Core).
 
-## Other uses
+## Other usages
 
 Although this is an MSBuild extension, you can use its core functionality in any environment. As long as you stay away from the `NetRevisionTask.Tasks` namespace, you should be fine calling any public API even without MSBuild DLLs available.
 
@@ -251,9 +253,9 @@ Batch example:
 
 ## VCS providers
 
-Git (for Windows) CLI must be installed using the setup for Windows or in one of %ProgramFiles*%\\Git* or in the PATH environment variable. The revision number is provided by counting revisions with the --first-parent option in the current branch. This is a stable value for the master branch if merges from other branches are done the correct way (always merge temporary branches into master, not reverse).
+Git (for Windows) CLI must be installed using the setup for Windows or in one of %ProgramFiles*%\\Git* or in the PATH environment variable. The revision number is provided by counting revisions with the `--first-parent` option in the current branch. This is a stable value for the master branch if merges from other branches are done the correct way (always merge temporary/work/feature branches into master, not reverse).
 
-SVN CLI (svn and svnversion) must be available on the system. This is included in the “CLI” option of TortoiseSVN. Other locations are considered (see source code).
+SVN CLI (svn and svnversion) must be available on the system. This is included in the “CLI” option of the TortoiseSVN setup. Other locations are considered (see source code).
 
 ## License
 

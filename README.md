@@ -69,6 +69,7 @@ Example:
       <NrtRequiredVcs>git</NrtRequiredVcs>
       <NrtShowRevision>true</NrtShowRevision>
       <NrtResolveMetadata>true</NrtResolveMetadata>
+      <NrtErrorOnModifiedRepoPattern>.*Release.*</NrtErrorOnModifiedRepoPattern>
     </PropertyGroup>
 
 The following MSBuild properties are supported:
@@ -108,6 +109,10 @@ Specifies whether the determined revision ID is printed during the build with hi
 **NrtResolveMetadata**: boolean, default: true.
 
 Specifies whether the value component of the `AssemblyMetadata` (`AssemblyMetadataAttribute`) is resolved.
+
+**NrtErrorOnModifiedRepoPattern**: string, default: “”.
+
+Specifies a case-insensitive Regex pattern string matching the build configuration string to trigger a build error if the repository contains modifications. If the string is empty, the functionality is disabled.
 
 ### Revision format
 

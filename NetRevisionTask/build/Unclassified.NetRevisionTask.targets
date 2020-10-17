@@ -33,7 +33,8 @@
       ResolveCopyright="$(NrtResolveCopyright)"
       Copyright="$(Copyright)"
       ShowRevision="$(NrtShowRevision)"
-      ConfigurationName="$(ConfigurationName)">
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="Version" PropertyName="Version"/>
       <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion"/>
       <Output TaskParameter="Copyright" PropertyName="Copyright"/>
@@ -70,7 +71,8 @@
       ResolveCopyright="$(NrtResolveCopyright)"
       ShowRevision="$(NrtShowRevision)"
       ResolveMetadata="$(NrtResolveMetadata)"
-      ConfigurationName="$(ConfigurationName)">
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="SourceAssemblyInfo" PropertyName="NrtSourceAssemblyInfo"/>
       <Output TaskParameter="PatchedAssemblyInfo" PropertyName="NrtPatchedAssemblyInfo"/>
     </PatchAssemblyInfo>

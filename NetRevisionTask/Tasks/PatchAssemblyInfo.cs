@@ -103,6 +103,12 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public string ConfigurationName { get; set; }
 
+		/// <summary>
+		/// Gets or sets the value of the build configuration RegEx pattern that triggers an error
+		/// on match if the repository is modified.
+		/// </summary>
+		public string ErrorOnModifiedRepoPattern { get; set; }
+
 		#endregion Properties
 
 		#region Task output properties
@@ -152,6 +158,12 @@ namespace NetRevisionTask.Tasks
 			if (string.IsNullOrEmpty(RevisionFormat))
 			{
 				RevisionFormat = data.GetDefaultRevisionFormat(logger);
+			}
+
+			// check whether a modified repository triggers a build error
+			if (Common.TriggerErrorIfRepoModified(logger, data, ErrorOnModifiedRepoPattern, ConfigurationName))
+			{
+				return false;
 			}
 
 			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = RemoveTagV,

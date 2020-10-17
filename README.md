@@ -68,6 +68,7 @@ Example:
       <NrtRemoveTagV>true</NrtRemoveTagV>
       <NrtRequiredVcs>git</NrtRequiredVcs>
       <NrtShowRevision>true</NrtShowRevision>
+      <NrtResolveMetadata>true</NrtResolveMetadata>
     </PropertyGroup>
 
 The following MSBuild properties are supported:
@@ -103,6 +104,10 @@ Specifies the name of the VCS that is expected to be found in the project direct
 **NrtShowRevision**: boolean, default: false.
 
 Specifies whether the determined revision ID is printed during the build with higher importance than normal, so it can be seen more easily. When patching the AssemblyInfo file, it is also displayed to the console.
+
+**NrtResolveMetadata**: boolean, default: true.
+
+Specifies whether the value component of the `AssemblyMetadata` (`AssemblyMetadataAttribute`) is resolved.
 
 ### Revision format
 

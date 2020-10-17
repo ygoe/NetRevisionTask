@@ -93,6 +93,11 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ShowRevision { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the AssemblyMetadata attribute is processed.
+		/// </summary>
+		public bool ResolveMetadata { get; set; }
+
 		#endregion Properties
 
 		#region Task output properties
@@ -157,7 +162,8 @@ namespace NetRevisionTask.Tasks
 					ResolveInformationalAttribute,
 					RevisionNumberOnly,
 					ResolveCopyright,
-					ShowRevision);
+					ShowRevision,
+					ResolveMetadata);
 			}
 			catch (FormatException ex)
 			{

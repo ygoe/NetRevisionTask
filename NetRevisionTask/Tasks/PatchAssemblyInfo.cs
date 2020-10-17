@@ -98,6 +98,11 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ResolveMetadata { get; set; }
 
+		/// <summary>
+		/// Gets or sets the value of the build configuration name.
+		/// </summary>
+		public string ConfigurationName { get; set; }
+
 		#endregion Properties
 
 		#region Task output properties
@@ -149,7 +154,8 @@ namespace NetRevisionTask.Tasks
 				RevisionFormat = data.GetDefaultRevisionFormat(logger);
 			}
 
-			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = RemoveTagV };
+			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = RemoveTagV,
+				ConfigurationName = ConfigurationName };
 			try
 			{
 				var aih = new AssemblyInfoHelper(ProjectDir, true, logger);

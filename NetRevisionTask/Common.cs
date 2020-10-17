@@ -8,7 +8,8 @@ namespace NetRevisionTask
 	internal class Common
 	{
 		public static (bool success, string version, string informationalVersion, string copyright)
-			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing)
+			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing,
+				string configurationName)
 		{
 			// Analyse working directory
 			RevisionData data = ProcessDirectory(projectDir, requiredVcs, tagMatch, logger);
@@ -26,7 +27,7 @@ namespace NetRevisionTask
 				revisionFormat = data.GetDefaultRevisionFormat(logger);
 			}
 
-			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV, BuildTime = DateTimeOffset.Now };
+			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV, BuildTime = DateTimeOffset.Now, ConfigurationName = configurationName };
 			try
 			{
 				return (true, rf.ResolveShort(revisionFormat), rf.Resolve(revisionFormat), rf.Resolve(copyright));

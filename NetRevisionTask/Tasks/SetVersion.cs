@@ -69,6 +69,11 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ShowRevision { get; set; }
 
+		/// <summary>
+		/// Gets the value of the build configuration name.
+		/// </summary>
+		public string ConfigurationName { get; set; }
+
 		#endregion Properties
 
 		#region Task output properties
@@ -110,7 +115,8 @@ namespace NetRevisionTask.Tasks
 			logger = new TaskLogger(Log);
 			logger.Trace($"NetRevisionTask: SetVersion ({targetFramework})");
 
-			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo);
+			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo,
+				ConfigurationName);
 			if (!result.success)
 			{
 				return false;

@@ -13,13 +13,15 @@ namespace NetRevisionTask
 			string revisionFormat = null,
 			string tagMatch = "v[0-9]*",
 			bool removeTagV = true,
-			string copyright = null)
+			string copyright = null,
+			string configurationName = null)
 		{
 			if (string.IsNullOrEmpty(projectDir))
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
+			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true, 
+				configurationName);
 			if (!result.success)
 			{
 				return null;
@@ -33,13 +35,15 @@ namespace NetRevisionTask
 			string revisionFormat = null,
 			string tagMatch = "v[0-9]*",
 			bool removeTagV = true,
-			string copyright = null)
+			string copyright = null,
+			string configurationName = null)
 		{
 			if (string.IsNullOrEmpty(projectDir))
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
+			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true,
+				configurationName);
 			if (!result.success)
 			{
 				return null;

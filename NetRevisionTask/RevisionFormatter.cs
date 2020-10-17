@@ -58,6 +58,11 @@ namespace NetRevisionTask
 			set => buildTime = value;
 		}
 
+		/// <summary>
+		/// Gets the value of the build configuration name.
+		/// </summary>
+		public string ConfigurationName { get; set; }
+
 		#endregion Data properties
 
 		#region Format resolving
@@ -145,6 +150,12 @@ namespace NetRevisionTask
 			}
 			format = format.Replace("{copyright}", copyright);
 			format = Regex.Replace(format, @"\{copyright:([0-9]+?)-?\}", m => (m.Groups[1].Value != copyright ? m.Groups[1].Value + "–" : "") + copyright);
+
+			// Build Configuration
+			format = format.Replace("{bconf}", ConfigurationName);
+			format = format.Replace("{BCONF}", ConfigurationName.ToUpperInvariant());
+			format = Regex.Replace(format, @"\{bconf:(.*?):(.+?)\}", m => ConfigurationName != m.Groups[2].Value ? m.Groups[1].Value + ConfigurationName : "");
+			format = Regex.Replace(format, @"\{BCONF:(.*?):(.+?)\}", m => ConfigurationName != m.Groups[2].Value ? m.Groups[1].Value + ConfigurationName.ToUpperInvariant() : "");
 
 			// Return revision ID
 			return format;

@@ -171,6 +171,12 @@ The following data field placeholders are supported:
 
 **`{copyright:<first>-}`**: Abbreviation for the copyright year range, starting at `<first>`. The following dash is optional but recommended for clearer understanding.
 
+**`{bconf}`**: Build configuration.
+
+**`{BCONF}`**: Build configuration, in upper case.
+
+**`{bconf:<sep>:<ref>}`, `{BCONF:<sep>:<ref>}`**: Build configuration, if not `<ref>` or empty, separated by `<sep>`, otherwise empty.
+
 Schemes convert a commit or build time to a compact string representation. They can be used to assign incrementing versions if no revision number is provided by the VCS. First, select from the build, commit or authoring time with `{b:…}`, `{c:…}` or `{a:…}`. This is followed by the scheme name. There are 4 types of schemes.
 
 The following time schemes are supported:

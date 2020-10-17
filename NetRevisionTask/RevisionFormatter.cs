@@ -11,7 +11,7 @@ namespace NetRevisionTask
 	{
 		#region Static data
 
-		private static readonly DateTimeOffset buildTime = DateTimeOffset.Now;
+		private static DateTimeOffset buildTime = DateTimeOffset.Now;
 
 		/// <summary>
 		/// Alphabet for the base-28 encoding. This uses the digits 0–9 and all characters a–z that
@@ -50,9 +50,13 @@ namespace NetRevisionTask
 		public bool RemoveTagV { get; set; }
 
 		/// <summary>
-		/// Gets the build time.
+		/// Gets or sets the build time.
 		/// </summary>
-		public DateTimeOffset BuildTime => buildTime;
+		public DateTimeOffset BuildTime
+		{
+			get => buildTime;
+			set => buildTime = value;
+		}
 
 		#endregion Data properties
 

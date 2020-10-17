@@ -26,7 +26,7 @@ namespace NetRevisionTask
 				revisionFormat = data.GetDefaultRevisionFormat(logger);
 			}
 
-			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV };
+			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV, BuildTime = DateTimeOffset.Now };
 			try
 			{
 				return (true, rf.ResolveShort(revisionFormat), rf.Resolve(revisionFormat), rf.Resolve(copyright));

@@ -112,7 +112,7 @@ Specifies whether the value component of the `AssemblyMetadata` (`AssemblyMetada
 
 **NrtErrorOnModifiedRepoPattern**: string, default: “”.
 
-Specifies a case-insensitive Regex pattern string matching the build configuration string to trigger a build error if the repository contains modifications. If the string is empty, the functionality is disabled.
+Specifies a case-insensitive RegEx pattern string matching the build configuration string to trigger a build error if the repository contains modifications. If the string is empty, the functionality is disabled.
 
 ### Revision format
 
@@ -180,7 +180,7 @@ The following data field placeholders are supported:
 
 **`{BCONF}`**: Build configuration, in upper case.
 
-**`{bconf:<sep>:<ref>}`, `{BCONF:<sep>:<ref>}`**: Build configuration, if not `<ref>` or empty, separated by `<sep>`, otherwise empty.
+**`{bconf:<sep>:<ref>}`, `{BCONF:<sep>:<ref>}`**: Build configuration, if not matching case-insensitive RegEx `<ref>` pattern, separated by `<sep>`, otherwise empty.
 
 Schemes convert a commit or build time to a compact string representation. They can be used to assign incrementing versions if no revision number is provided by the VCS. First, select from the build, commit or authoring time with `{b:…}`, `{c:…}` or `{a:…}`. This is followed by the scheme name. There are 4 types of schemes.
 

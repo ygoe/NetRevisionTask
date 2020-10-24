@@ -154,8 +154,8 @@ namespace NetRevisionTask
 			// Build Configuration
 			format = format.Replace("{bconf}", ConfigurationName);
 			format = format.Replace("{BCONF}", ConfigurationName.ToUpperInvariant());
-			format = Regex.Replace(format, @"\{bconf:(.*?):(.+?)\}", m => ConfigurationName != m.Groups[2].Value ? m.Groups[1].Value + ConfigurationName : "");
-			format = Regex.Replace(format, @"\{BCONF:(.*?):(.+?)\}", m => ConfigurationName != m.Groups[2].Value ? m.Groups[1].Value + ConfigurationName.ToUpperInvariant() : "");
+			format = Regex.Replace(format, @"\{bconf:(.*?):(.+?)\}", m => !Regex.IsMatch(ConfigurationName, $@"^{m.Groups[2].Value}$", RegexOptions.IgnoreCase) ? m.Groups[1].Value + ConfigurationName : "");
+			format = Regex.Replace(format, @"\{BCONF:(.*?):(.+?)\}", m => !Regex.IsMatch(ConfigurationName, $@"^{m.Groups[2].Value}$", RegexOptions.IgnoreCase) ? m.Groups[1].Value + ConfigurationName.ToUpperInvariant() : "");
 
 			// Return revision ID
 			return format;

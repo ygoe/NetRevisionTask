@@ -111,6 +111,11 @@ namespace NetRevisionTask
 			}
 
 			string tagName = RevisionData.Tag;
+			if (string.IsNullOrEmpty(tagName))
+			{
+				// default value when no tag exists in repository
+				tagName = "v0.0.0.0";
+			}
 			if (RemoveTagV && Regex.IsMatch(tagName, "^v[0-9]"))
 			{
 				tagName = tagName.Substring(1);

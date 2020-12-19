@@ -158,7 +158,7 @@ namespace NetRevisionTask
 
 			// Build Configuration
 			if (ConfigurationName == null)
-            {
+			{
 				ConfigurationName = string.Empty;
 			}
 			format = format.Replace("{bconf}", ConfigurationName);

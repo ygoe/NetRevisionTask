@@ -157,6 +157,10 @@ namespace NetRevisionTask
 			format = Regex.Replace(format, @"\{copyright:([0-9]+?)-?\}", m => (m.Groups[1].Value != copyright ? m.Groups[1].Value + "–" : "") + copyright);
 
 			// Build Configuration
+			if (ConfigurationName == null)
+            {
+				ConfigurationName = string.Empty;
+			}
 			format = format.Replace("{bconf}", ConfigurationName);
 			format = format.Replace("{BCONF}", ConfigurationName.ToUpperInvariant());
 			format = Regex.Replace(format, @"\{bconf:(.*?):(.+?)\}", m => !Regex.IsMatch(ConfigurationName, $@"^{m.Groups[2].Value}$", RegexOptions.IgnoreCase) ? m.Groups[1].Value + ConfigurationName : "");

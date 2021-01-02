@@ -21,7 +21,7 @@
   <!--
     Always set the version properties for MSBuild.
   -->
-  <Target Name="NrtSetVersion" BeforeTargets="BeforeBuild">
+  <Target Name="NrtSetVersion" AfterTargets="PreBuildEvent">
     <SetVersion
       ProjectDir="$(MSBuildProjectDirectory)"
       GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
@@ -53,7 +53,7 @@
     The original source files are backed up to be restored in the next target after building.
     This target is required for classic (pre 2017) csproj projects.
   -->
-  <Target Name="NrtPatchAssemblyInfo" BeforeTargets="BeforeBuild">
+  <Target Name="NrtPatchAssemblyInfo" AfterTargets="PreBuildEvent">
     <PatchAssemblyInfo
       ProjectDir="$(MSBuildProjectDirectory)"
       IntermediateOutputPath="$(IntermediateOutputPath)"

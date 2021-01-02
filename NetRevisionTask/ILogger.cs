@@ -3,7 +3,7 @@
 	/// <summary>
 	/// An interface that is used for logging internal and error events.
 	/// </summary>
-	internal interface ILogger
+	public interface ILogger
 	{
 		/// <summary>
 		/// Logs a raw output line of an executed application.

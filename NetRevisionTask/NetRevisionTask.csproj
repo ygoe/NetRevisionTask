@@ -24,10 +24,13 @@
     <PackageIconUrl>https://raw.githubusercontent.com/ygoe/NetRevisionTask/master/netrevisiontask_64.png</PackageIconUrl>
     <PackageTags>build version management git svn subversion msbuild vcs</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)NetRevisionTask.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' != 'Release'">
     <!-- Sets the debug pre-release version automatically -->
     <VersionSuffix>alpha.$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">

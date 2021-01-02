@@ -13,6 +13,7 @@
       <NrtResolveSimpleAttributes Condition="'$(NrtResolveSimpleAttributes)' == ''">true</NrtResolveSimpleAttributes>
       <NrtResolveInformationalAttribute Condition="'$(NrtResolveInformationalAttribute)' == ''">true</NrtResolveInformationalAttribute>
       <NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
+      <NrtResolveMetadata Condition="'$(NrtResolveMetadata)' == ''">true</NrtResolveMetadata>
       <NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
       <NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
     </PropertyGroup>
@@ -21,7 +22,7 @@
   <!--
     Always set the version properties for MSBuild.
   -->
-  <Target Name="NrtSetVersion" BeforeTargets="BeforeBuild">
+  <Target Name="NrtSetVersion" AfterTargets="PreBuildEvent">
     <SetVersion
       ProjectDir="$(MSBuildProjectDirectory)"
       GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
@@ -31,7 +32,9 @@
       RemoveTagV="$(NrtRemoveTagV)"
       ResolveCopyright="$(NrtResolveCopyright)"
       Copyright="$(Copyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="Version" PropertyName="Version"/>
       <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion"/>
       <Output TaskParameter="Copyright" PropertyName="Copyright"/>
@@ -53,7 +56,7 @@
     The original source files are backed up to be restored in the next target after building.
     This target is required for classic (pre 2017) csproj projects.
   -->
-  <Target Name="NrtPatchAssemblyInfo" BeforeTargets="BeforeBuild">
+  <Target Name="NrtPatchAssemblyInfo" AfterTargets="PreBuildEvent">
     <PatchAssemblyInfo
       ProjectDir="$(MSBuildProjectDirectory)"
       IntermediateOutputPath="$(IntermediateOutputPath)"
@@ -66,7 +69,10 @@
       ResolveInformationalAttribute="$(NrtResolveInformationalAttribute)"
       RevisionNumberOnly="$(NrtRevisionNumberOnly)"
       ResolveCopyright="$(NrtResolveCopyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ResolveMetadata="$(NrtResolveMetadata)"
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="SourceAssemblyInfo" PropertyName="NrtSourceAssemblyInfo"/>
       <Output TaskParameter="PatchedAssemblyInfo" PropertyName="NrtPatchedAssemblyInfo"/>
     </PatchAssemblyInfo>

@@ -7,14 +7,14 @@ namespace NetRevisionTask
 	/// <summary>
 	/// Contains data about a revision of the source directory.
 	/// </summary>
-	internal class RevisionData
+	public class RevisionData
 	{
 		#region Management properties
 
 		/// <summary>
 		/// Gets or sets the VCS provider that provided the data in the current instance.
 		/// </summary>
-		public IVcsProvider VcsProvider { get; set; }
+		internal IVcsProvider VcsProvider { get; set; }
 
 		#endregion Management properties
 
@@ -23,72 +23,72 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Gets or sets the commit hash of the currently checked out revision.
 		/// </summary>
-		public string CommitHash { get; set; }
+		public string CommitHash { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the revision number of the currently checked out revision.
 		/// </summary>
-		public int RevisionNumber { get; set; }
+		public int RevisionNumber { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the commit time of the currently checked out revision.
 		/// </summary>
-		public DateTimeOffset CommitTime { get; set; }
+		public DateTimeOffset CommitTime { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the author time of the currently checked out revision.
 		/// </summary>
-		public DateTimeOffset AuthorTime { get; set; }
+		public DateTimeOffset AuthorTime { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the working copy is modified.
 		/// </summary>
-		public bool IsModified { get; set; }
+		public bool IsModified { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the working copy contains mixed revisions.
 		/// </summary>
-		public bool IsMixed { get; set; }
+		public bool IsMixed { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the repository URL of the working directory.
 		/// </summary>
-		public string RepositoryUrl { get; set; }
+		public string RepositoryUrl { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the committer name of the currently checked out revision.
 		/// </summary>
-		public string CommitterName { get; set; }
+		public string CommitterName { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the committer e-mail address of the currently checked out revision.
 		/// </summary>
-		public string CommitterEMail { get; set; }
+		public string CommitterEMail { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the author name of the currently checked out revision.
 		/// </summary>
-		public string AuthorName { get; set; }
+		public string AuthorName { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the author e-mail address of the currently checked out revision.
 		/// </summary>
-		public string AuthorEMail { get; set; }
+		public string AuthorEMail { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the branch currently checked out in the working directory.
 		/// </summary>
-		public string Branch { get; set; }
+		public string Branch { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the name of the most recent matching tag.
 		/// </summary>
-		public string Tag { get; set; }
+		public string Tag { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets the number of commits since the most recent matching tag.
 		/// </summary>
-		public int CommitsAfterTag { get; set; }
+		public int CommitsAfterTag { get; internal set; }
 
 		#endregion Revision data properties
 
@@ -97,7 +97,7 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Normalizes all data properties to prevent null values.
 		/// </summary>
-		public void Normalize()
+		internal void Normalize()
 		{
 			if (CommitHash == null) CommitHash = "";
 			if (RepositoryUrl == null) RepositoryUrl = "";
@@ -110,10 +110,10 @@ namespace NetRevisionTask
 		}
 
 		/// <summary>
-		/// Dumps the revision data is debug output is enabled.
+		/// Dumps the revision data if debug output is enabled.
 		/// </summary>
 		/// <param name="logger">A logger.</param>
-		public void DumpData(ILogger logger)
+		internal void DumpData(ILogger logger)
 		{
 			logger.Trace("Revision data:");
 			logger.Trace("  AuthorEMail: " + AuthorEMail);
@@ -137,7 +137,7 @@ namespace NetRevisionTask
 		/// </summary>
 		/// <param name="logger">A logger.</param>
 		/// <returns>The default revision format.</returns>
-		public string GetDefaultRevisionFormat(ILogger logger)
+		internal string GetDefaultRevisionFormat(ILogger logger)
 		{
 			if (!string.IsNullOrEmpty(CommitHash) && !Regex.IsMatch(CommitHash, "^0+$"))
 			{

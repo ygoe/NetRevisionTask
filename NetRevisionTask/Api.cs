@@ -19,12 +19,12 @@ namespace NetRevisionTask
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
-			if (!result.success)
+			var (success, _, informationalVersion, _) = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
+			if (!success)
 			{
 				return null;
 			}
-			return result.informationalVersion;
+			return informationalVersion;
 		}
 
 		public static string GetShortVersion(
@@ -39,12 +39,12 @@ namespace NetRevisionTask
 				projectDir = Directory.GetCurrentDirectory();
 			var logger = new ConsoleLogger();
 
-			var result = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
-			if (!result.success)
+			var (success, version, _, _) = Common.GetVersion(projectDir, requiredVcs, revisionFormat, tagMatch, removeTagV, copyright ?? "", logger, true);
+			if (!success)
 			{
 				return null;
 			}
-			return result.version;
+			return version;
 		}
 	}
 }

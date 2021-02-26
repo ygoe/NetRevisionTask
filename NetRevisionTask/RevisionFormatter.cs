@@ -365,7 +365,7 @@ namespace NetRevisionTask
 			var data = new SchemeData();
 
 			Match match;
-			string sourceStr = null;
+			string sourceStr;
 			string timeComponents = null;
 			string timeSeparator = null;
 			int numberBase = 0;
@@ -641,7 +641,7 @@ namespace NetRevisionTask
 			while (intervalCount > 0)
 			{
 				int digit = intervalCount % alphabet.Length;
-				intervalCount = intervalCount / alphabet.Length;
+				intervalCount /= alphabet.Length;
 				s = alphabet[digit] + s;
 			}
 			if (upperCase)

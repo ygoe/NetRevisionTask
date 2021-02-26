@@ -102,7 +102,7 @@ namespace NetRevisionTask.VcsProviders
 				CreateNoWindow = true
 			};
 			var process = Process.Start(psi);
-			string line = null;
+			string line;
 			int lineCount = 0;
 			while (!process.StandardOutput.EndOfStream)
 			{
@@ -179,7 +179,6 @@ namespace NetRevisionTask.VcsProviders
 					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
-				line = null;
 				if (!process.StandardOutput.EndOfStream)
 				{
 					line = process.StandardOutput.ReadLine();
@@ -263,7 +262,6 @@ namespace NetRevisionTask.VcsProviders
 					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
-				line = null;
 				if (!process.StandardOutput.EndOfStream)
 				{
 					line = process.StandardOutput.ReadLine();
@@ -294,7 +292,6 @@ namespace NetRevisionTask.VcsProviders
 					CreateNoWindow = true
 				};
 				process = Process.Start(psi);
-				line = null;
 				if (!process.StandardOutput.EndOfStream)
 				{
 					line = process.StandardOutput.ReadLine();
@@ -329,9 +326,9 @@ namespace NetRevisionTask.VcsProviders
 			if (git == null)
 			{
 				string pathEnv = Environment.GetEnvironmentVariable("PATH");
-				foreach (string _dir in pathEnv.Split(Path.PathSeparator))
+				foreach (string dir_ in pathEnv.Split(Path.PathSeparator))
 				{
-					string dir = _dir;
+					string dir = dir_;
 					if (dir.StartsWith("\"") && dir.EndsWith("\""))
 					{
 						// Strip quotes (no Path.PathSeparator supported in quoted directories though)

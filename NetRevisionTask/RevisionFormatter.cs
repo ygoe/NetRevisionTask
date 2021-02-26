@@ -140,7 +140,7 @@ namespace NetRevisionTask
 				copyright = RevisionData.CommitTime.Year.ToString();
 			}
 			format = format.Replace("{copyright}", copyright);
-			format = Regex.Replace(format, @"\{copyright:([0-9]+?)-?\}", m => (m.Groups[1].Value != copyright ? m.Groups[1].Value + "–" : "") + copyright);
+			format = Regex.Replace(format, @"\{copyright:([0-9]+?)-?\}", m => (m.Groups[1].Value != copyright ? m.Groups[1].Value + "-" : "") + copyright);
 
 			// Return revision ID
 			return format;

@@ -37,15 +37,27 @@ If you’re **creating a NuGet package** of your project, make sure to declare t
 
 ### Default behaviour for Git
 
-If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. The expected tag name format is “v1.2.3”, with a leading lower-case “v”. (Abbreviated names like “v1” or “v1.2” may also work.) Revisions that are not directly tagged are considered a pre-release after the last version tag and the branch name and number of commits after the tag will be appended, together with the abbreviated commit hash as build info. This is a production-ready default that you may want to keep. Examples:
+If not configured otherwise, tags following semantic versioning ([SemVer 2.0.0](https://semver.org/)) will be considered to determine the assembly version. The expected tag name format is “v1.2.3”, with a leading lower-case “v”. (Abbreviated names like “v1” or “v1.2” should also work.) Revisions that are not directly tagged are considered a pre-release after the last version tag and the branch name and number of commits after the tag will be appended, together with the abbreviated commit hash as build info. This is a production-ready default that you may want to keep. Its format is defined as:
+
+    {semvertag+chash}{!:-mod}
+
+Examples:
 
 * 0.0.1-master.1+abcdef1
 * 1.0.1-feature-20.3+abcdef1
 * 1.2.0
 
+If you want to keep this but not include the branch name for the main branch, e.g. “master”, you could change it to this:
+
+    {semvertag:master:+chash}{!:-mod}
+
 ### Default behaviour for Subversion
 
-If not configured otherwise, the revision number is used as the patch number. You should change that before you make a release. Examples:
+If not configured otherwise, the revision number is used as the patch number. You should change that before you make a release. Its format is defined as:
+
+    0.0.{revnum}{!:-mod}
+
+ Examples:
 
 * 0.0.1
 * 0.0.20
@@ -136,7 +148,7 @@ The following data field placeholders are supported:
 
 **`{semvertag}`**: Semantic version based on the most recent matching tag name. Revisions that are not directly tagged are considered a pre-release after the last tag (the patch value is incremented by 1) and the branch name and number of commits after the tag will be appended.
 
-**`{semvertag+chash}`**: Semantic version based on the most recent matching tag name, see `{semvertag}`. Pre-releases also have the abbreviated commit hash appended after a plus (`+`) sign as build info. This is the default format for Git repositories.
+**`{semvertag+chash}`**: Semantic version based on the most recent matching tag name, see `{semvertag}`. Pre-releases also have the abbreviated commit hash appended after a plus (`+`) sign as build info. This is part of the default format for Git repositories.
 
 **`{semvertag+chash:<length>}`**: Same as `{semvertag+chash}` but with the commit hash truncated to the specified length instead of the default 7.
 

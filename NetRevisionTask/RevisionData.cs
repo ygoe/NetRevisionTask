@@ -142,12 +142,12 @@ namespace NetRevisionTask
 			if (!string.IsNullOrEmpty(CommitHash) && !Regex.IsMatch(CommitHash, "^0+$"))
 			{
 				logger?.Trace("No format available, using default format for commit hash.");
-				return "{semvertag+chash}";
+				return "{semvertag+chash}{!:-mod}";
 			}
 			if (RevisionNumber > 0)
 			{
 				logger?.Trace("No format available, using default format for revision number.");
-				return "0.0.{revnum}";
+				return "0.0.{revnum}{!:-mod}";
 			}
 
 			logger?.Trace("No format available, using empty format.");

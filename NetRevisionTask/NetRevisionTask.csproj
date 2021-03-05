@@ -19,6 +19,7 @@
     <Company>unclassified software development</Company>
     <Description>Injects the current VCS revision of a working directory in a custom format into a .NET assembly build. Based on the .NET Revision Tool, integrated as an MSBuild task, for .NET Framework and .NET Core.</Description>
     <Copyright>© Yves Goergen</Copyright>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/ygoe/NetRevisionTask</RepositoryUrl>
     <PackageProjectUrl>https://unclassified.software/apps/netrevisiontask</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/ygoe/NetRevisionTask/master/netrevisiontask_64.png</PackageIconUrl>

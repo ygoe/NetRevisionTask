@@ -71,6 +71,12 @@ namespace NetRevisionTask.VcsProviders
 					rootPath = path;
 					return true;
 				}
+				if (File.Exists(Path.Combine(path, ".git")))
+				{
+					Logger?.Success($"  Found {path} [uses worktree]");
+					rootPath = path;
+					return true;
+				}
 				path = Path.GetDirectoryName(path);
 			}
 			while (!string.IsNullOrEmpty(path));

@@ -78,6 +78,7 @@ namespace NetRevisionTask
 		/// <param name="revOnly">Indicates whether only the last number is replaced by the revision number.</param>
 		/// <param name="copyrightAttribute">Indicates whether the copyright year is replaced.</param>
 		/// <param name="echo">Indicates whether the final informational version string is displayed.</param>
+		/// <param name="processAnyProperty">Indicates wheter all properties should be processed.</param>
 		/// <returns>The name of the patched AssemblyInfo file.</returns>
 		public string PatchFile(
 			string patchedFileDir,
@@ -87,7 +88,8 @@ namespace NetRevisionTask
 			bool informationalAttribute,
 			bool revOnly,
 			bool copyrightAttribute,
-			bool echo)
+			bool echo,
+			bool processAnyProperty)
 		{
 			logger?.Trace($@"Patching file ""{fileName}""...");
 			ReadFileLines(FullFileName);
@@ -111,7 +113,7 @@ namespace NetRevisionTask
 			}
 
 			// Process all lines in the file
-			ResolveAllLines(rf, simpleAttributes, informationalAttribute, revOnly, copyrightAttribute, echo);
+			ResolveAllLines(rf, simpleAttributes, informationalAttribute, revOnly, copyrightAttribute, echo, processAnyProperty);
 
 			// Write all lines to the file
 			string patchedFileName = Path.Combine(patchedFileDir, "Nrt" + Path.GetFileName(fileName));
@@ -250,7 +252,8 @@ namespace NetRevisionTask
 		/// <param name="revOnly">Indicates whether only the last number is replaced by the revision number.</param>
 		/// <param name="copyrightAttribute">Indicates whether the copyright year is replaced.</param>
 		/// <param name="echo">Indicates whether the final informational version string is displayed.</param>
-		private void ResolveAllLines(RevisionFormatter rf, bool simpleAttributes, bool informationalAttribute, bool revOnly, bool copyrightAttribute, bool echo)
+		/// <param name="processAnyProperty">Indicates wheter all properties should be processed.</param>
+		private void ResolveAllLines(RevisionFormatter rf, bool simpleAttributes, bool informationalAttribute, bool revOnly, bool copyrightAttribute, bool echo, bool processAnyProperty)
 		{
 			// Preparing a truncated dotted-numeric version if we may need it
 			string truncVersion = null;
@@ -383,6 +386,16 @@ namespace NetRevisionTask
 						lines[i] = match.Groups[1].Value + copyrightText + match.Groups[3].Value;
 						logger?.Success("Found AssemblyCopyright attribute.");
 						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{copyrightText}"".");
+					}
+				}
+
+				if (processAnyProperty && !string.IsNullOrEmpty(lines[i]))
+				{
+					string newline = rf.Resolve(lines[i]);
+					if(newline != lines[i])
+					{
+						lines[i] = newline;
+						logger?.Trace($@"  Replaced ""{lines[i]}"" with ""{newline}"".");
 					}
 				}
 			}

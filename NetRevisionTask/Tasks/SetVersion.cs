@@ -75,6 +75,11 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ShowRevision { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether all properties are processed.
+		/// </summary>
+		public bool ProcessAnyProperty { get; set; }
+
 		#endregion Properties
 
 		#region Task output properties

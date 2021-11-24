@@ -108,9 +108,12 @@ namespace NetRevisionTask
 			if (Branch == null) Branch = "";
 			if (Tag == null) Tag = "";
 
-			// replace invalid characters on branch name
-			// see: https://semver.org/spec/v2.0.0.html#spec-item-9
+			// Replace invalid characters on branch name
+			// See: https://semver.org/spec/v2.0.0.html#spec-item-9
 			Branch = Regex.Replace(Branch, "[^a-zA-Z0-9-]", "-");
+
+			// Also collapse multiple hyphens into a single one
+			Branch = Regex.Replace(Branch, "-+", "-");
 		}
 
 		/// <summary>

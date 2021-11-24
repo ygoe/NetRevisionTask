@@ -107,6 +107,10 @@ namespace NetRevisionTask
 			if (AuthorEMail == null) AuthorEMail = "";
 			if (Branch == null) Branch = "";
 			if (Tag == null) Tag = "";
+
+			// replace invalid characters on branch name
+			// see: https://semver.org/spec/v2.0.0.html#spec-item-9
+			Branch = Regex.Replace(Branch, "[^a-zA-Z0-9-]", "-");
 		}
 
 		/// <summary>

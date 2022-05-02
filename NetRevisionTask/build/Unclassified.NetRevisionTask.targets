@@ -15,6 +15,7 @@
       <NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
       <NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
       <NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
+      <NrtProjectDir Condition="'$(NrtProjectDir)' == ''">$(MSBuildProjectDirectory)</NrtProjectDir>
     </PropertyGroup>
   </Target>
 
@@ -27,7 +28,7 @@
   -->
   <Target Name="NrtSetVersion" BeforeTargets="GenerateAdditionalSources">
     <SetVersion
-      ProjectDir="$(MSBuildProjectDirectory)"
+      ProjectDir="$(NrtProjectDir)"
       GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
       NuGetPackOutput="@(NuGetPackOutput)"
       RevisionFormat="$(NrtRevisionFormat)"

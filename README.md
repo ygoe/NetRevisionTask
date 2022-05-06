@@ -119,7 +119,7 @@ Specifies whether the determined revision ID is printed during the build with hi
 
 **NrtProjectDirectory**: string, default: $(MSBuildProjectDirectory).
 
-Sets the directory, where NRT starts searching for the VCS files. This is helpful if NRT is added to a project, that is a submodule of another repository and should observe the parent repository.
+Sets the directory where NRT starts searching for the VCS files. This is helpful if NRT is added to a project that is a submodule of another repository and should observe the parent repository.
 
 ### Revision format
 

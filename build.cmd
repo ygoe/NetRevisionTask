@@ -12,6 +12,7 @@ if exist bin\Release\%TargetFramework2% rd /s /q bin\Release\%TargetFramework2% 
 dotnet clean -v m -c Release -nologo || goto error
 
 :: Build
+dotnet restore || goto error
 dotnet build -c Release -nologo || goto error
 
 :: Exit

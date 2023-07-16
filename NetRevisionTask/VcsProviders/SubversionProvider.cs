@@ -119,7 +119,7 @@ namespace NetRevisionTask.VcsProviders
 				CreateNoWindow = true
 			};
 			var process = Process.Start(psi);
-			string line = null;
+			string line;
 			while (!process.StandardOutput.EndOfStream)
 			{
 				line = process.StandardOutput.ReadLine();
@@ -178,7 +178,6 @@ namespace NetRevisionTask.VcsProviders
 				//StandardOutputEncoding = Encoding.Default   // TODO: Test if it's necessary (Encoding.Default is not supported in .NET Standard 1.6)
 			};
 			process = Process.Start(psi);
-			line = null;
 			string workingCopyRootPath = null;
 			while (!process.StandardOutput.EndOfStream)
 			{
@@ -253,9 +252,9 @@ namespace NetRevisionTask.VcsProviders
 			if (svn == null)
 			{
 				string pathEnv = Environment.GetEnvironmentVariable("PATH");
-				foreach (string _dir in pathEnv.Split(Path.PathSeparator))
+				foreach (string dir_ in pathEnv.Split(Path.PathSeparator))
 				{
-					string dir = _dir;
+					string dir = dir_;
 					if (dir.StartsWith("\"") && dir.EndsWith("\""))
 					{
 						// Strip quotes (no Path.PathSeparator supported in quoted directories though)

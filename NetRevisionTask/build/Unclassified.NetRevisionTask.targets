@@ -15,16 +15,22 @@
       <NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
       <NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
       <NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
+      <NrtProjectDir Condition="'$(NrtProjectDir)' == ''">$(MSBuildProjectDirectory)</NrtProjectDir>
     </PropertyGroup>
   </Target>
+
+  <PropertyGroup>
+    <GetPackageVersionDependsOn>$(GetPackageVersionDependsOn);NrtSetVersion</GetPackageVersionDependsOn>
+  </PropertyGroup>
 
   <!--
     Always set the version properties for MSBuild.
   -->
-  <Target Name="NrtSetVersion" BeforeTargets="BeforeBuild">
+  <Target Name="NrtSetVersion" BeforeTargets="GenerateAdditionalSources">
     <SetVersion
-      ProjectDir="$(MSBuildProjectDirectory)"
+      ProjectDir="$(NrtProjectDir)"
       GenerateAssemblyInfo="$(GenerateAssemblyInfo)"
+      NuGetPackOutput="@(NuGetPackOutput)"
       RevisionFormat="$(NrtRevisionFormat)"
       RequiredVcs="$(NrtRequiredVcs)"
       TagMatch="$(NrtTagMatch)"
@@ -53,7 +59,7 @@
     The original source files are backed up to be restored in the next target after building.
     This target is required for classic (pre 2017) csproj projects.
   -->
-  <Target Name="NrtPatchAssemblyInfo" BeforeTargets="BeforeBuild">
+  <Target Name="NrtPatchAssemblyInfo" BeforeTargets="GenerateAdditionalSources">
     <PatchAssemblyInfo
       ProjectDir="$(MSBuildProjectDirectory)"
       IntermediateOutputPath="$(IntermediateOutputPath)"

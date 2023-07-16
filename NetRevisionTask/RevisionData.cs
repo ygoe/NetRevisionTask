@@ -107,6 +107,13 @@ namespace NetRevisionTask
 			if (AuthorEMail == null) AuthorEMail = "";
 			if (Branch == null) Branch = "";
 			if (Tag == null) Tag = "";
+
+			// Replace invalid characters on branch name
+			// See: https://semver.org/spec/v2.0.0.html#spec-item-9
+			Branch = Regex.Replace(Branch, "[^a-zA-Z0-9-]", "-");
+
+			// Also collapse multiple hyphens into a single one
+			Branch = Regex.Replace(Branch, "-+", "-");
 		}
 
 		/// <summary>
@@ -142,12 +149,12 @@ namespace NetRevisionTask
 			if (!string.IsNullOrEmpty(CommitHash) && !Regex.IsMatch(CommitHash, "^0+$"))
 			{
 				logger?.Trace("No format available, using default format for commit hash.");
-				return "{semvertag+chash}";
+				return "{semvertag+chash}{!:-mod}";
 			}
 			if (RevisionNumber > 0)
 			{
 				logger?.Trace("No format available, using default format for revision number.");
-				return "0.0.{revnum}";
+				return "0.0.{revnum}{!:-mod}";
 			}
 
 			logger?.Trace("No format available, using empty format.");

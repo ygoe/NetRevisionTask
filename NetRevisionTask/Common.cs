@@ -8,7 +8,7 @@ namespace NetRevisionTask
 {
 	internal class Common
 	{
-		public static (bool success, string version, string informationalVersion, string copyright)
+		public static (bool Success, string Version, string InformationalVersion, string Copyright)
 			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing,
 				string configurationName, string configurationNameErrorPattern)
 		{
@@ -134,8 +134,7 @@ namespace NetRevisionTask
 		public static string GetRevisionFormat(string projectDir, ILogger logger, bool warnOnMissing)
 		{
 			logger.Trace("No format specified, searching AssemblyInfo source file.");
-			AssemblyInfoHelper aih = null;
-			aih = new AssemblyInfoHelper(projectDir, false, logger);
+			var aih = new AssemblyInfoHelper(projectDir, false, logger);
 			if (!aih.FileExists)
 			{
 				if (warnOnMissing)

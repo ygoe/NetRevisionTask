@@ -33,6 +33,12 @@ namespace NetRevisionTask.Tasks
 		public bool GenerateAssemblyInfo { get; set; }
 
 		/// <summary>
+		/// Gets or sets the NuGet pack output file names. This is only used to determine whether
+		/// we're in the build or pack target.
+		/// </summary>
+		public string[] NuGetPackOutput { get; set; }
+
+		/// <summary>
 		/// Gets or sets the revision format template.
 		/// </summary>
 		public string RevisionFormat { get; set; }
@@ -121,17 +127,18 @@ namespace NetRevisionTask.Tasks
 			logger = new TaskLogger(Log);
 			logger.Trace($"NetRevisionTask: SetVersion ({targetFramework})");
 
-			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo,
+			bool warnOnMissing = !GenerateAssemblyInfo && (NuGetPackOutput == null || NuGetPackOutput.Length == 0);
+			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, warnOnMissing,
 				ConfigurationName, ErrorOnModifiedRepoPattern);
-			if (!result.success)
+			if (!result.Success)
 			{
 				return false;
 			}
-			Version = result.version;
-			InformationalVersion = result.informationalVersion;
+			Version = result.Version;
+			InformationalVersion = result.InformationalVersion;
 			if (ResolveCopyright)
 			{
-				Copyright = result.copyright;
+				Copyright = result.Copyright;
 			}
 
 			if (ShowRevision)

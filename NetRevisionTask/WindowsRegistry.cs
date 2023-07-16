@@ -16,7 +16,7 @@ namespace NetRevisionTask
 		/// <param name="key">The path of the key to read the value from.</param>
 		/// <param name="value">The value to read.</param>
 		/// <returns>The read value if it exists and is a string; otherwise, null.</returns>
-		public string GetStringValue(string root, string key, string value)
+		public static string GetStringValue(string root, string key, string value)
 		{
 #if NETFULL
 			RegistryKey rootKey;
@@ -36,9 +36,9 @@ namespace NetRevisionTask
 			{
 				object obj = regKey.GetValue(value);
 				regKey.Close();
-				if (obj is string)
+				if (obj is string objStr)
 				{
-					return (string)obj;
+					return objStr;
 				}
 			}
 #else
@@ -61,7 +61,7 @@ namespace NetRevisionTask
 					var sb = new StringBuilder(1000);
 					int length = sb.Capacity;
 					bool found = RegQueryValueEx(keyHandle, value, 0, out RegistryValueKind kind, sb, ref length) == 0;
-					RegCloseKey(keyHandle);
+					_ = RegCloseKey(keyHandle);
 					if (found)
 						return sb.ToString();
 				}
@@ -74,7 +74,7 @@ namespace NetRevisionTask
 
 #if !NETFULL
 
-		[DllImport("advapi32.dll")]
+		[DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
 		private static extern int RegOpenKeyEx(
 			UIntPtr hKey,
 			string subKey,
@@ -82,11 +82,11 @@ namespace NetRevisionTask
 			int samDesired,
 			out UIntPtr hkResult);
 
-		[DllImport("advapi32.dll", SetLastError = true)]
+		[DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
 		private static extern int RegCloseKey(
 			UIntPtr hKey);
 
-		[DllImport("advapi32.dll", SetLastError = true)]
+		[DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
 		private static extern uint RegQueryValueEx(
 			UIntPtr hKey,
 			string lpValueName,
@@ -95,7 +95,7 @@ namespace NetRevisionTask
 			IntPtr lpData,
 			ref int lpcbData);
 
-		[DllImport("advapi32.dll", SetLastError = true)]
+		[DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
 		private static extern uint RegQueryValueEx(
 			UIntPtr hKey,
 			string lpValueName,

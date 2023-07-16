@@ -33,7 +33,7 @@ namespace NetRevisionTask
 			this.logger = logger;
 			this.projectDir = projectDir;
 
-			FindAssemblyInfoFile(projectDir);
+			FindAssemblyInfoFile();
 			if (fileName == null && throwOnMissingFile)
 			{
 				throw new FileNotFoundException($@"AssemblyInfo file not found in ""{projectDir}"" or the usual subdirectories.");
@@ -158,8 +158,7 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Finds the AssemblyInfo file in the specified directory.
 		/// </summary>
-		/// <param name="projectDir">The project directory to search in.</param>
-		private void FindAssemblyInfoFile(string projectDir)
+		private void FindAssemblyInfoFile()
 		{
 			fileName = Path.Combine("Properties", "AssemblyInfo.cs");
 			if (!File.Exists(FullFileName))

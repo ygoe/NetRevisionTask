@@ -350,13 +350,11 @@ namespace NetRevisionTask.VcsProviders
 				}
 			}
 
-			var registry = new WindowsRegistry();
-
 			// Read registry uninstaller key
 			if (git == null && isWindows)
 			{
 				string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1";
-				string loc = registry.GetStringValue("HKLM", keyPath, "InstallLocation");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "InstallLocation");
 				if (loc != null)
 				{
 					string testPath = Path.Combine(loc, Path.Combine("bin", gitExeName));
@@ -372,7 +370,7 @@ namespace NetRevisionTask.VcsProviders
 			if (git == null && Is64Bit && isWindows)
 			{
 				string keyPath = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1";
-				string loc = registry.GetStringValue("HKLM", keyPath, "InstallLocation");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "InstallLocation");
 				if (loc != null)
 				{
 					string testPath = Path.Combine(loc, Path.Combine("bin", gitExeName));
@@ -388,7 +386,7 @@ namespace NetRevisionTask.VcsProviders
 			if (git == null && isWindows)
 			{
 				string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1";
-				string loc = registry.GetStringValue("HKCU", keyPath, "InstallLocation");
+				string loc = WindowsRegistry.GetStringValue("HKCU", keyPath, "InstallLocation");
 				if (loc != null)
 				{
 					string testPath = Path.Combine(loc, Path.Combine("bin", gitExeName));

@@ -270,13 +270,11 @@ namespace NetRevisionTask.VcsProviders
 				if (!File.Exists(svn)) svn = null;
 			}
 
-			var registry = new WindowsRegistry();
-
 			// If TortoiseSVN has been installed with command-line binaries
 			if (svn == null && isWindows)
 			{
 				string keyPath = @"Software\TortoiseSVN";
-				string loc = registry.GetStringValue("HKLM", keyPath, "Directory");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "Directory");
 				if (loc != null)
 				{
 					svn = Path.Combine(loc, Path.Combine(@"bin", svnExeName));
@@ -295,7 +293,7 @@ namespace NetRevisionTask.VcsProviders
 			if (svn == null && isWindows)
 			{
 				string keyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\CollabNet Subversion Client";
-				string loc = registry.GetStringValue("HKLM", keyPath, "UninstallString");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "UninstallString");
 				if (loc != null)
 				{
 					svn = Path.Combine(Path.GetDirectoryName(loc), svnExeName);
@@ -312,7 +310,7 @@ namespace NetRevisionTask.VcsProviders
 			if (svn == null && isWindows)
 			{
 				string keyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F5980BF8-ED95-4742-A89F-CDAC202D53CF}_is1";
-				string loc = registry.GetStringValue("HKLM", keyPath, "InstallLocation");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "InstallLocation");
 				if (loc != null)
 				{
 					svn = Path.Combine(loc, svnExeName);
@@ -331,7 +329,7 @@ namespace NetRevisionTask.VcsProviders
 			if (svn == null && Is64Bit && isWindows)
 			{
 				string keyPath = @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\CollabNet Subversion Client";
-				string loc = registry.GetStringValue("HKLM", keyPath, "UninstallString");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "UninstallString");
 				if (loc != null)
 				{
 					svn = Path.Combine(Path.GetDirectoryName(loc), svnExeName);
@@ -348,7 +346,7 @@ namespace NetRevisionTask.VcsProviders
 			if (svn == null && Is64Bit && isWindows)
 			{
 				string keyPath = @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{F5980BF8-ED95-4742-A89F-CDAC202D53CF}_is1";
-				string loc = registry.GetStringValue("HKLM", keyPath, "InstallLocation");
+				string loc = WindowsRegistry.GetStringValue("HKLM", keyPath, "InstallLocation");
 				if (loc != null)
 				{
 					svn = Path.Combine(loc, svnExeName);

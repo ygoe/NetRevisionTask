@@ -52,7 +52,7 @@ namespace NetRevisionTask
 		/// <summary>
 		/// Gets the build time.
 		/// </summary>
-		public DateTimeOffset BuildTime => buildTime;
+		public static DateTimeOffset BuildTime => buildTime;
 
 		#endregion Data properties
 

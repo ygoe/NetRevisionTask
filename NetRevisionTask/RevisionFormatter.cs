@@ -11,7 +11,7 @@ namespace NetRevisionTask
 	{
 		#region Static data
 
-		private static readonly DateTimeOffset buildTime = DateTimeOffset.Now;
+		private static DateTimeOffset buildTime = DateTimeOffset.Now;
 
 		/// <summary>
 		/// Alphabet for the base-28 encoding. This uses the digits 0–9 and all characters a–z that
@@ -50,9 +50,18 @@ namespace NetRevisionTask
 		public bool RemoveTagV { get; set; }
 
 		/// <summary>
-		/// Gets the build time.
+		/// Gets or sets the build time.
 		/// </summary>
-		public DateTimeOffset BuildTime => buildTime;
+		public DateTimeOffset BuildTime
+		{
+			get => buildTime;
+			set => buildTime = value;
+		}
+
+		/// <summary>
+		/// Gets the value of the build configuration name.
+		/// </summary>
+		public string ConfigurationName { get; set; }
 
 		#endregion Data properties
 
@@ -102,6 +111,11 @@ namespace NetRevisionTask
 			}
 
 			string tagName = RevisionData.Tag;
+			if (string.IsNullOrEmpty(tagName))
+			{
+				// default value when no tag exists in repository
+				tagName = "v0.0.0.0";
+			}
 			if (RemoveTagV && Regex.IsMatch(tagName, "^v[0-9]"))
 			{
 				tagName = tagName.Substring(1);
@@ -141,6 +155,16 @@ namespace NetRevisionTask
 			}
 			format = format.Replace("{copyright}", copyright);
 			format = Regex.Replace(format, @"\{copyright:([0-9]+?)-?\}", m => (m.Groups[1].Value != copyright ? m.Groups[1].Value + "-" : "") + copyright);
+
+			// Build Configuration
+			if (ConfigurationName == null)
+			{
+				ConfigurationName = string.Empty;
+			}
+			format = format.Replace("{bconf}", ConfigurationName);
+			format = format.Replace("{BCONF}", ConfigurationName.ToUpperInvariant());
+			format = Regex.Replace(format, @"\{bconf:(.*?):(.+?)\}", m => !Regex.IsMatch(ConfigurationName, $@"^{m.Groups[2].Value}$", RegexOptions.IgnoreCase) ? m.Groups[1].Value + ConfigurationName : "");
+			format = Regex.Replace(format, @"\{BCONF:(.*?):(.+?)\}", m => !Regex.IsMatch(ConfigurationName, $@"^{m.Groups[2].Value}$", RegexOptions.IgnoreCase) ? m.Groups[1].Value + ConfigurationName.ToUpperInvariant() : "");
 
 			// Return revision ID
 			return format;

@@ -31,7 +31,6 @@
   <PropertyGroup Condition="'$(Configuration)' != 'Release'">
     <!-- Sets the debug pre-release version automatically -->
     <VersionSuffix>alpha.$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
-    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">

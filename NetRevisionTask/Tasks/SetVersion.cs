@@ -69,17 +69,6 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ShowRevision { get; set; }
 
-		/// <summary>
-		/// Gets the value of the build configuration name.
-		/// </summary>
-		public string ConfigurationName { get; set; }
-
-		/// <summary>
-		/// Gets or sets the value of the build configuration RegEx pattern that triggers an error
-		/// on match if the repository is modified.
-		/// </summary>
-		public string ErrorOnModifiedRepoPattern { get; set; }
-
 		#endregion Properties
 
 		#region Task output properties
@@ -121,8 +110,7 @@ namespace NetRevisionTask.Tasks
 			logger = new TaskLogger(Log);
 			logger.Trace($"NetRevisionTask: SetVersion ({targetFramework})");
 
-			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo,
-				ConfigurationName, ErrorOnModifiedRepoPattern);
+			var result = Common.GetVersion(ProjectDir, RequiredVcs, RevisionFormat, TagMatch, RemoveTagV, Copyright ?? "", logger, !GenerateAssemblyInfo);
 			if (!result.success)
 			{
 				return false;

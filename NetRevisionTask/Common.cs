@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using NetRevisionTask.VcsProviders;
 
 namespace NetRevisionTask
@@ -9,18 +8,13 @@ namespace NetRevisionTask
 	internal class Common
 	{
 		public static (bool success, string version, string informationalVersion, string copyright)
-			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing,
-				string configurationName, string configurationNameErrorPattern)
+			GetVersion(string projectDir, string requiredVcs, string revisionFormat, string tagMatch, bool removeTagV, string copyright, ILogger logger, bool warnOnMissing)
 		{
 			// Analyse working directory
 			RevisionData data = ProcessDirectory(projectDir, requiredVcs, tagMatch, logger);
 			if (!string.IsNullOrEmpty(requiredVcs) && data.VcsProvider == null)
 			{
 				logger.Error($@"The required version control system ""{requiredVcs}"" is not available or not used in the project directory.");
-				return (false, null, null, null);
-			}
-			if (TriggerErrorIfRepoModified(logger, data, configurationNameErrorPattern, configurationName))
-			{
 				return (false, null, null, null);
 			}
 			if (string.IsNullOrEmpty(revisionFormat))
@@ -32,7 +26,7 @@ namespace NetRevisionTask
 				revisionFormat = data.GetDefaultRevisionFormat(logger);
 			}
 
-			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV, BuildTime = DateTimeOffset.Now, ConfigurationName = configurationName };
+			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = removeTagV };
 			try
 			{
 				return (true, rf.ResolveShort(revisionFormat), rf.Resolve(revisionFormat), rf.Resolve(copyright));
@@ -151,31 +145,6 @@ namespace NetRevisionTask
 				logger.Trace("Found format: " + revisionFormat);
 			}
 			return revisionFormat;
-		}
-
-		/// <summary>
-		/// Determines if a modified repository that matches the given pattern triggers a build error.
-		/// </summary>
-		/// <param name="data">The data about the current revision of the source directory.</param>
-		/// <param name="cfgNamePattern">The match pattern that shall trigger the error.</param>
-		/// <param name="cfgName">The name of the build configuration.</param>
-		/// <returns>True if an error shall be triggered, false otherwise.</returns>
-		public static bool TriggerErrorIfRepoModified(ILogger logger, RevisionData data, string cfgNameMatchPattern, string cfgName)
-		{
-			if (!string.IsNullOrEmpty(cfgNameMatchPattern) && !string.IsNullOrEmpty(cfgName))
-			{
-				if (data.IsModified)
-				{
-					var match = Regex.Match(cfgName, $@"^{cfgNameMatchPattern}$", RegexOptions.IgnoreCase);
-					if (match.Success)
-					{
-						logger.Error($@"The ""{cfgName}"" configuration does not allow builds with a modified {data.VcsProvider.Name} repository.");
-						return true;
-					}
-				}
-			}
-
-			return false;
 		}
 	}
 }

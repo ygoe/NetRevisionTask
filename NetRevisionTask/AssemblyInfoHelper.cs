@@ -78,7 +78,6 @@ namespace NetRevisionTask
 		/// <param name="revOnly">Indicates whether only the last number is replaced by the revision number.</param>
 		/// <param name="copyrightAttribute">Indicates whether the copyright year is replaced.</param>
 		/// <param name="echo">Indicates whether the final informational version string is displayed.</param>
-		/// <param name="metadataAttribute">Indicates whether the AssemblyMetadata attribute is processed.</param>
 		/// <returns>The name of the patched AssemblyInfo file.</returns>
 		public string PatchFile(
 			string patchedFileDir,
@@ -88,8 +87,7 @@ namespace NetRevisionTask
 			bool informationalAttribute,
 			bool revOnly,
 			bool copyrightAttribute,
-			bool echo,
-			bool metadataAttribute)
+			bool echo)
 		{
 			logger?.Trace($@"Patching file ""{fileName}""...");
 			ReadFileLines(FullFileName);
@@ -113,7 +111,7 @@ namespace NetRevisionTask
 			}
 
 			// Process all lines in the file
-			ResolveAllLines(rf, simpleAttributes, informationalAttribute, revOnly, copyrightAttribute, echo, metadataAttribute);
+			ResolveAllLines(rf, simpleAttributes, informationalAttribute, revOnly, copyrightAttribute, echo);
 
 			// Write all lines to the file
 			string patchedFileName = Path.Combine(patchedFileDir, "Nrt" + Path.GetFileName(fileName));
@@ -252,8 +250,7 @@ namespace NetRevisionTask
 		/// <param name="revOnly">Indicates whether only the last number is replaced by the revision number.</param>
 		/// <param name="copyrightAttribute">Indicates whether the copyright year is replaced.</param>
 		/// <param name="echo">Indicates whether the final informational version string is displayed.</param>
-		/// <param name="metadataAttribute">Indicates whether the AssemblyMetadata attribute is processed.</param>
-		private void ResolveAllLines(RevisionFormatter rf, bool simpleAttributes, bool informationalAttribute, bool revOnly, bool copyrightAttribute, bool echo, bool metadataAttribute)
+		private void ResolveAllLines(RevisionFormatter rf, bool simpleAttributes, bool informationalAttribute, bool revOnly, bool copyrightAttribute, bool echo)
 		{
 			// Preparing a truncated dotted-numeric version if we may need it
 			string truncVersion = null;
@@ -386,23 +383,6 @@ namespace NetRevisionTask
 						lines[i] = match.Groups[1].Value + copyrightText + match.Groups[3].Value;
 						logger?.Success("Found AssemblyCopyright attribute.");
 						logger?.Trace($@"  Replaced ""{match.Groups[2].Value}"" with ""{copyrightText}"".");
-					}
-				}
-
-				if (metadataAttribute)
-				{
-					// Replace the value part of AssemblyMetadata with the resolved string of what
-					// was already there. Format: [assembly: AssemblyMetadata("Key", "Value")]
-					match = Regex.Match(
-						lines[i],
-						@"^(\s*\" + attrStart + @"\s*assembly\s*:\s*AssemblyMetadata\s*\(\s*"")(.*?)(""\s*,\s*"")(.*?)(""\s*\)\s*\" + attrEnd + @".*)$",
-						RegexOptions.IgnoreCase);
-					if (match.Success)
-					{
-						string metadataText = rf.Resolve(match.Groups[4].Value);
-						lines[i] = match.Groups[1].Value + match.Groups[2].Value + match.Groups[3].Value + metadataText + match.Groups[5].Value;
-						logger?.Success("Found AssemblyMetadata attribute.");
-						logger?.Trace($@"  Replaced [{match.Groups[2].Value}] => ""{match.Groups[4].Value}"" with ""{metadataText}"".");
 					}
 				}
 			}

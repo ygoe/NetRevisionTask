@@ -93,22 +93,6 @@ namespace NetRevisionTask.Tasks
 		/// </summary>
 		public bool ShowRevision { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the AssemblyMetadata attribute is processed.
-		/// </summary>
-		public bool ResolveMetadata { get; set; }
-
-		/// <summary>
-		/// Gets or sets the value of the build configuration name.
-		/// </summary>
-		public string ConfigurationName { get; set; }
-
-		/// <summary>
-		/// Gets or sets the value of the build configuration RegEx pattern that triggers an error
-		/// on match if the repository is modified.
-		/// </summary>
-		public string ErrorOnModifiedRepoPattern { get; set; }
-
 		#endregion Properties
 
 		#region Task output properties
@@ -160,14 +144,7 @@ namespace NetRevisionTask.Tasks
 				RevisionFormat = data.GetDefaultRevisionFormat(logger);
 			}
 
-			// check whether a modified repository triggers a build error
-			if (Common.TriggerErrorIfRepoModified(logger, data, ErrorOnModifiedRepoPattern, ConfigurationName))
-			{
-				return false;
-			}
-
-			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = RemoveTagV,
-				ConfigurationName = ConfigurationName };
+			var rf = new RevisionFormatter { RevisionData = data, RemoveTagV = RemoveTagV };
 			try
 			{
 				var aih = new AssemblyInfoHelper(ProjectDir, true, logger);
@@ -180,8 +157,7 @@ namespace NetRevisionTask.Tasks
 					ResolveInformationalAttribute,
 					RevisionNumberOnly,
 					ResolveCopyright,
-					ShowRevision,
-					ResolveMetadata);
+					ShowRevision);
 			}
 			catch (FormatException ex)
 			{

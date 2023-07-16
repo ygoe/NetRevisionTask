@@ -68,8 +68,6 @@ Example:
       <NrtRemoveTagV>true</NrtRemoveTagV>
       <NrtRequiredVcs>git</NrtRequiredVcs>
       <NrtShowRevision>true</NrtShowRevision>
-      <NrtResolveMetadata>true</NrtResolveMetadata>
-      <NrtErrorOnModifiedRepoPattern>.*Release.*</NrtErrorOnModifiedRepoPattern>
     </PropertyGroup>
 
 The following MSBuild properties are supported:
@@ -105,14 +103,6 @@ Specifies the name of the VCS that is expected to be found in the project direct
 **NrtShowRevision**: boolean, default: false.
 
 Specifies whether the determined revision ID is printed during the build with higher importance than normal, so it can be seen more easily. When patching the AssemblyInfo file, it is also displayed to the console.
-
-**NrtResolveMetadata**: boolean, default: true.
-
-Specifies whether the value component of the `AssemblyMetadata` (`AssemblyMetadataAttribute`) is resolved.
-
-**NrtErrorOnModifiedRepoPattern**: string, default: “”.
-
-Specifies a case-insensitive RegEx pattern string matching the build configuration string to trigger a build error if the repository contains modifications. If the string is empty, the functionality is disabled.
 
 ### Revision format
 
@@ -175,12 +165,6 @@ The following data field placeholders are supported:
 **`{copyright}`**: Abbreviation for the copyright year (commit or build time).
 
 **`{copyright:<first>-}`**: Abbreviation for the copyright year range, starting at `<first>`. The following dash is optional but recommended for clearer understanding.
-
-**`{bconf}`**: Build configuration.
-
-**`{BCONF}`**: Build configuration, in upper case.
-
-**`{bconf:<sep>:<ref>}`, `{BCONF:<sep>:<ref>}`**: Build configuration, if not matching case-insensitive RegEx `<ref>` pattern, separated by `<sep>`, otherwise empty.
 
 Schemes convert a commit or build time to a compact string representation. They can be used to assign incrementing versions if no revision number is provided by the VCS. First, select from the build, commit or authoring time with `{b:…}`, `{c:…}` or `{a:…}`. This is followed by the scheme name. There are 4 types of schemes.
 

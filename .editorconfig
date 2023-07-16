@@ -8,6 +8,8 @@ root = true
 insert_final_newline = true
 end_of_line = crlf
 indent_style = tab
+vsspell_section_id = 7001f507961747b8a917eb15b0da2eb2
+vsspell_ignored_words_7001f507961747b8a917eb15b0da2eb2 = Api|Committer|fallback|Utc|Util|Vcs
 
 [*.{cs,vb}]
 # Sort using and Import directives with System.* appearing first
@@ -142,6 +144,9 @@ csharp_space_between_method_declaration_name_and_open_parenthesis = false
 csharp_space_between_method_declaration_parameter_list_parentheses = false
 csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
+
+# VSSpell001: Spell Check
+dotnet_diagnostic.VSSpell001.severity = suggestion
 
 [*.{xml,csproj,targets,props,json}]
 indent_size = 2

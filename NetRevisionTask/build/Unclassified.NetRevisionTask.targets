@@ -51,6 +51,7 @@
     <PropertyGroup>
       <FileVersion>$(Version)</FileVersion>
       <PackageVersion>$(InformationalVersion)</PackageVersion>
+      <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
   </Target>
 

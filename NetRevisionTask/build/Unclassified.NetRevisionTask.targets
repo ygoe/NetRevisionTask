@@ -13,6 +13,7 @@
       <NrtResolveSimpleAttributes Condition="'$(NrtResolveSimpleAttributes)' == ''">true</NrtResolveSimpleAttributes>
       <NrtResolveInformationalAttribute Condition="'$(NrtResolveInformationalAttribute)' == ''">true</NrtResolveInformationalAttribute>
       <NrtResolveCopyright Condition="'$(NrtResolveCopyright)' == ''">true</NrtResolveCopyright>
+      <NrtResolveMetadata Condition="'$(NrtResolveMetadata)' == ''">true</NrtResolveMetadata>
       <NrtTagMatch Condition="'$(NrtTagMatch)' == ''">v[0-9]*</NrtTagMatch>
       <NrtRemoveTagV Condition="'$(NrtRemoveTagV)' == ''">true</NrtRemoveTagV>
       <NrtProjectDir Condition="'$(NrtProjectDir)' == ''">$(MSBuildProjectDirectory)</NrtProjectDir>
@@ -37,7 +38,9 @@
       RemoveTagV="$(NrtRemoveTagV)"
       ResolveCopyright="$(NrtResolveCopyright)"
       Copyright="$(Copyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="Version" PropertyName="Version"/>
       <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion"/>
       <Output TaskParameter="Copyright" PropertyName="Copyright"/>
@@ -73,7 +76,10 @@
       ResolveInformationalAttribute="$(NrtResolveInformationalAttribute)"
       RevisionNumberOnly="$(NrtRevisionNumberOnly)"
       ResolveCopyright="$(NrtResolveCopyright)"
-      ShowRevision="$(NrtShowRevision)">
+      ShowRevision="$(NrtShowRevision)"
+      ResolveMetadata="$(NrtResolveMetadata)"
+      ConfigurationName="$(ConfigurationName)"
+      ErrorOnModifiedRepoPattern="$(NrtErrorOnModifiedRepoPattern)">
       <Output TaskParameter="SourceAssemblyInfo" PropertyName="NrtSourceAssemblyInfo"/>
       <Output TaskParameter="PatchedAssemblyInfo" PropertyName="NrtPatchedAssemblyInfo"/>
     </PatchAssemblyInfo>

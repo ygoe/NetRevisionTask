@@ -102,8 +102,15 @@ namespace NetRevisionTask
 			}
 
 			string tagName = RevisionData.Tag;
-			if (RemoveTagV && Regex.IsMatch(tagName, "^v[0-9]"))
+			// This detects any pattern of v1 to v1.2.3-foo.
+			// It is way more complex, but can also trim tags like "project-one/v1.2.3-alpha2".
+			// These tag-types are often used by mono-repositories.
+			string versionPattern = @"v([0-9]+(?:\.[0-9]+(?:\.[0-9]+)?)?)(?:-(.+))?$";
+			if (RemoveTagV && Regex.IsMatch(tagName, versionPattern))
 			{
+				// Replace anything around the pattern.
+				tagName = tagName.Replace(Regex.Replace(tagName, versionPattern, ""), "");
+				// Remove the "v" at the start.
 				tagName = tagName.Substring(1);
 			}
 			format = format.Replace("{semvertag}", GetSemVerTagSpec(tagName));
